@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: gr.athenainnovation.imis.fusion.fetcher.rules.parser.RuleParserTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.253 sec

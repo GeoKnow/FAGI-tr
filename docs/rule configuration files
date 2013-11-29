@@ -1,0 +1,98 @@
+Rules for matching and transforming triples are expressed in the form of triple restrictions and are defined in five separate configuration files.
+
+Overall:
+The following apply for all rule configuration files:
+-- <UID> : UIDs are used for the identification of a specific rule. They must be bracketed by '<', '>', can contain the characters defined by the following regex '([a-z]|_|[0-9])', must be unique within each configuration file and finally must be prefixed by 'X_' where 'X' is a single character unique for each configuration file that indicates the type of rules defined within.
+
+-- <URI> : URIs must be bracketed by '{', '}'. They will be used directly in the SPARQL queries that will be produced from the respective rule instead of being matched via regex.
+
+-- <regex> : Regular expressions must be bracketed by double quotes '"'. When producing the SPARQL queries each regex will be assigned a variable of the form '?var#' where # is a number and an entry in the following format will be added to the restriction: 'FILTER (REGEX (?var#, regex, "i"))'. The 'i' flag indicates that during matcing case will be ignored.
+
+-- <datatype> : Datatypes are either of type <URI> and follow the same rules or can have the special value 'none' which means no datatype matching will be attempted. They are only used in object rules.
+
+-- <type> : Type is a special value that tells the parser how to parse the geometry serialisation contained in a literal. They are only used in object rules and can have the following values:
+	&lat : latitude
+	&long : longitude
+	&lat_long : lat, long pair (comma or space seperated)
+	&alt : altitude (currently ignored by the geometry parsers and writers)
+	&wkt : Well Known Text
+	&gml : Geometry Markup Language
+	
+-- <variable> & <anon> : Variables must begin with '?' and cannot begin with '?var'. Anonymous nodes must begin with '_:'. They are only used in full triple rules.
+
+All lines beginning with '#' are ignored by the parser.
+
+#########################
+
+The first three types of rules (property, class, object) are helper rules intented to improve the readability and formulation of full triple rules. The only rules that will be matched are the full triple rules. The values of any helper rule will be substituted into the full triple rule internally by the parser wherever the respective helper rule's UID is referenced.
+
+-- property:
+The configuration file 'property' is used for the definition of rules that match properties. Rules are defined in the following format:
+<UID> <regex OR URI>
+
+<UID> : UIDs for property rules must be prefixed with 'p_'.
+<regex OR URI> : The second value can be either a URI or a regex that will be used to match a particular property.
+
+e.g. <p_wgs84_lat> {http://www.w3.org/2003/01/geo/wgs84_pos#lat}
+
+
+-- class:
+The configuration file 'class' is used for the definition of rules that match classes. Rules are defined by the following syntax:
+<UID> <regex OR URI>
+
+<UID> : UIDs for class rules must be prefixed with 'c_'.
+<regex OR URI> : The second value can be either a URI or a regex that will be used to match a particular class.
+
+e.g. <c_geosparql_geometry> {http://www.opengis.net/ont/geosparql#Geometry}
+
+
+-- object:
+The configuration file 'object' is used for the definition of rules that match object literals. Rules are defined by the following syntax: <UID> <regex> <datatype> <type>
+
+<UID> : UIDs for object rules must be prefixed with 'o_'.
+<regex> : The second value is a regex that will be used to match the object literal.
+<datatype> : The third value will used to match the literal datatype or will be ignored if set to 'none'.
+<type> : The fourth value will be used to indicate to the geometry parser how to process the literal.
+
+e.g. <o_wkt> ".*(point|linestring|polygon|polyhedralsurface|triangle|tin|multipoint|multilinestring|multipolygon|geometrycollection)(\szm|\sz|\sm|)\s*\(.*\)" none &wkt
+
+
+-- full triple rules:
+The configuration files 'triple_default' and 'triple_user' are used for the definition of the full triple rules that will be used for matching. These rules reference property, object and class rules. 'triple_default' will contain predefined rules, while 'triple_user' will contain user added rules. Both files use the same syntax and are handled the same way internally. Rules are defined by the following syntax:
+<uid> <description> <number of triples> <triples> .
+
+<UID> : UIDs for full triple rules must be prefixed with 'd_' if they are default rules or 'u_' if they are user rules.
+<description> : The third value is used to add a human readable explanation of the rule's purpose. It must be enclosed in double quotes '"'. The string may contain no white spaces. Instead any '_' characters will be replaced with white spaces during parsing.
+<number of triples> : The third value is the number of triples this rule contains. If there is only one triple the entire rule can be in one line. Otherwise this value must be the last value in the first line and each triple must be in its own separate line.
+<triples> : Triples are used to define a restriction for matching specific graphs. The last triple in the rule must end in a ' .'. Each triple is defined by the following syntax:
+<variable OR anon> <regex OR UID of "property" rule OR URI> <regex OR UID of "object" rule OR "class" rule OR anon node>
+
+Triple block specifications:
+-- There must only be one variable. This variable is assumed to define the root node to which the matched literals belong.
+-- All other internal nodes must instead be defined as anonymous nodes.
+-- There is no limit to the number of triples defined or to the number of different object rules referenced by those triples. However, each rule must only define a single type of geometry. If the same rule contains objects with more than one logical geometry type there is no guarantee which one the parser will use. (&lat and &long form a single logical geometry type and the parser will expect to find both or neither).
+
+e.g.
+<k_geosparql_wkt> "" 1 ?x "(^http://www.opengis.net/ont/geosparql#asWKT$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_wkt> .
+
+e.g.
+<k_w3c_loc2> "" 3
+?x <p_wgs84_loc> _:a
+_:a <p_wgs84_lat> <o_lat>
+_:a <p_wgs84_long> <o_long> .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

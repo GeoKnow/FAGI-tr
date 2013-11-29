@@ -1,0 +1,73 @@
+Datasets pane:
+	-- <Source/Target> Dataset
+		-- Endpoint: dataset endpoint URL
+		-- Graph: dataset graph URI
+		-- Remote: Specifies whether the dataset is remote and thus should be copied to the local Virtuoso server.
+		-- Root node namespace (regex): Regex for matching root node URIs (features of interest).
+		-- Local graph (unmodified): The URI of the local graph to which the dataset will be copied as is.
+		-- Local graph (transformed): The URI of the local graph to which the dataset will be copied with the geometries transformed.
+		
+		
+	-- Link file
+	Link file must be in the N-TRIPLES format and the contained links must be owl:sameAs links.
+		-- Link file: Path to file containing links between those root nodes in the source and target datasets that are to be fetched with their geometries and metadata. If left empty every root node will be fetched instead.
+		-- Link: Source->Target toggle: Specifies whether the links from a source dataset node (subject) to a target dataset node (object) or the opposite.
+	
+	
+	-- Virtuoso connection
+		-- URL: URL for the connection to the virtuoso database (not the endpoint)
+		-- Username: db username
+		-- Password: db password
+	
+#####################################################
+
+<Source/Target> dataset matcher:
+		Provides functionality for parsing from file and then matching a set of rules against the respective dataset.
+		
+		-- Retain: If retain is checked then during fetching the respective rule will be used to copy geometry triples as they are in the unmodified local graph (if dataset is remote) and to enter the geometries transformed to the transformed local graph.	
+		
+#####################################################
+
+Fetcher & Transformer pane:
+	Provides functionality for fetching metadata and geometry triples and optionally transforming geometry triples from input datasets.
+	
+	-- Transformation enabled: If disabled geometries will be entered into the unmodified graph only and entries to the transformed graph will be omitted.
+	
+	-- Override CRS: If set, the specified CRS will be used, otherwise the default (or detected if rule has been matched) CRS for the transformation rule in question will be used. If manually specified CRS must be given in the format <Authority>:<SRID>, e.g. "EPSG:4326".
+	
+#####################################################
+#####################################################
+
+Use case:
+
+1). Set endpoint/graph/root node namespace for source and target datasets in the "dataset" pane.
+2). If a dataset is remote and must be copied to local Virtuoso db, check "Remote" and specify URIs for the unmodified and modified local graphs to which it is to be copied.
+3). Set path to links file to fetch only specified nodes. Leave blank to fetch all nodes.
+4). Set Virtuoso db connection parameters.
+5). "Set"
+6). Match rules in the "source dataset matcher" and "target dataset matcher" panes.
+7). For each matched rule decided whether the geometry should be retained/transformed by checking "Retain".
+8). In the "Fetcher & Transformer" pane either disable geometry transformation or select rule to transform geometries to. Manually specify CRS to transform to or accept indicated values.
+9). "Fetch and transform datasets"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

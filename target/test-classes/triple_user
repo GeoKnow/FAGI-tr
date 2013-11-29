@@ -1,0 +1,22 @@
+# User added tripe rules
+# <uid> <number of triples> <triples> .
+
+# Lines beginning with "#" are ignored.
+
+# UIDs must start with "u_" and may contain "([a-z]|_|[0-9])". They must be enclosed in "<", ">". Those and only those rules matching just the namespaces of known standards must have UIDs that end in "_ns".
+
+# Triple:
+# <variable> <UID of "known" or "combined" or "class" rule>
+# OR
+# <variable> <regex OR UID of "property" rule> <regex OR UID of "object" rule OR special value OR variable OR anon node>
+
+# If there are more than one triples, each triple must be in its own line otherwise the entire rule must be in one line.
+
+# Reg. expressions must be enclosed in '"'. Variables begin with "?". Anon nodes begin with "_:". End of triple chain is denoted by full stop. During regex matching case is ignored.
+
+# Special values
+# &lat, &long : check if valid lat, long
+# &lat_long : check if valid lat, long pair (comma or space seperated)
+# &alt : check if valid altitude
+
+# TODO

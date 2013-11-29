@@ -1,0 +1,29 @@
+# Object literal matching rules.
+# <UID> <regex> <datatype> <type>
+
+# Lines beginning with "#" are ignored.
+# UIDs must start with "o_" and may contain "([a-z]|_|[0-9])". They must be enclosed in "<", ">".
+# Reg. expressions must be enclosed in '"'. During regex matching case is ignored.
+
+# Datatype must be a URI enclosed in "{", "}" or "none".
+
+# Special values <type> (these values tell the parser how to process the literal)
+# &lat, &long: latitude, longitude
+# &lat_long : lat, long pair (comma or space seperated)
+# &alt : altitude
+# &wkt: WKT
+# &gml: GML
+
+
+# WKT
+<o_wkt> ".*(point|linestring|polygon|polyhedralsurface|triangle|tin|multipoint|multilinestring|multipolygon|geometrycollection)(\szm|\sz|\sm|)\s*\(.*\)" {http://www.opengis.net/ont/geosparql#wktLiteral} &wkt
+
+# GML
+# <o_gml> "^<gml:[a-z]+[^>]*>(.|\n)*</gml:[a-z]+[^>]>$" none &gml
+<o_gml> "^<gml:[a-z]+.*>(.|\n)*</gml:[a-z]+.*>$" none &gml
+
+# Lat/Long/Alt
+<o_lat> "([0-9]|\.)+" none &lat
+<o_long> "([0-9]|\.)+" none &long
+<o_alt> "([0-9]|\.)+" none &alt
+<o_lat_long> "([0-9]|\.|,|\s)+" none &lat_long

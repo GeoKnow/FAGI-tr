@@ -1,0 +1,17 @@
+# Property matching rules.
+# <UID> <regex OR URI>
+
+# Lines beginning with '#' are ignored.
+# UIDs must start with 'p_' and may contain '([a-z]|_|[0-9])'. They must be enclosed in '<', '>'.
+# Reg. expressions must be enclosed in '"'. During regex matching case is ignored.
+# URIs must be enclosed in '{', '}'.
+
+
+<p_geo> "^.*geo[^/]*$"
+<p_lat_long> "^.*[lat|long][^/]*$"
+
+<p_wgs84_lat> {http://www.w3.org/2003/01/geo/wgs84_pos#lat}
+<p_wgs84_long> {http://www.w3.org/2003/01/geo/wgs84_pos#long}
+<p_wgs84_alt> {http://www.w3.org/2003/01/geo/wgs84_pos#alt}
+<p_wgs84_lat_long> {http://www.w3.org/2003/01/geo/wgs84_pos#lat_long}
+<p_wgs84_loc> {http://www.w3.org/2003/01/geo/wgs84_pos#location}

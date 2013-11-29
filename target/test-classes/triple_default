@@ -1,0 +1,45 @@
+# Default triple rules
+# <uid> <description> <number of triples> <triples> .
+
+# Lines beginning with "#" are ignored.
+
+# UIDs must start with "d_" and may contain "([a-z]|_|[0-9])". They must be enclosed in "<", ">". Those and only those rules matching just the namespaces of known standards must have UIDs that end in "_ns".
+
+# Description is used to add a human readable explanation of the rule's purpose. It must be enclosed in '"'.
+
+# Triple:
+# <variable OR anon> <regex OR UID of "property" rule OR URI> <regex OR UID of "object" rule OR "class" rule OR anon node>
+
+# If there are more than one triples, each triple must be in its own line otherwise the entire rule must be in one line.
+
+# Reg. expressions must be enclosed in '"'. Variables must begin with "?" and cannot begin with "?var". Anon nodes begin with "_:".
+# End of triple chain is denoted by full stop. During regex matching case is ignored.
+
+
+# ## W3C Basic Geo Vocabulary ##
+
+<d_w3c_lat_lon1> "Matches_latitude/longitude_values_in_separate_triples_expressed_using_the_W3C_Basic_Geo_Vocabulary." 2
+?x <p_wgs84_lat> <o_lat>
+?x <p_wgs84_long> <o_long> .
+
+<d_w3c_lat_lon2> "Matches_latitude/longitude_values_in_a_single_triple_expressed_using_the_W3C_Basic_Geo_Vocabulary." 1 ?x <p_wgs84_lat_long> <o_lat_long> .
+
+<d_w3c_loc1> "Matches_latitude/longitude_values_in_separate_triples_under_an_anon_node_expressed_using_the_W3C_Basic_Geo_Vocabulary." 3
+?x <p_wgs84_loc> _:a
+_:a <p_wgs84_lat> <o_lat>
+_:a <p_wgs84_long> <o_long> .
+
+<d_w3c_loc3> "Matches_latitude/longitude_values_in_a_single_triple_under_an_anon_node_ expressed_using_the_W3C_Basic_Geo_Vocabulary." 2
+?x <p_wgs84_loc> _:a
+_:a <p_wgs84_lat_long> <o_lat_long> .
+
+
+# ## GeoSPARQL ##
+
+<d_geosparql_hasGeom_wkt> "Matches_GeoSPARQL_with_WKT_serialisation." 2
+?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
+_:a "(^http://www.opengis.net/ont/geosparql#asWKT$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_wkt> .
+
+<d_geosparql_hasGeom_gml> "Matches_GeoSPARQL_with_GML_serialisation." 2
+?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
+_:a "(^http://www.opengis.net/ont/geosparql#asGML$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_gml> .

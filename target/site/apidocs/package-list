@@ -1,0 +1,11 @@
+gr.athenainnovation.imis.fusion.fetcher.core
+gr.athenainnovation.imis.fusion.fetcher.geometry
+gr.athenainnovation.imis.fusion.fetcher.geometry.crs
+gr.athenainnovation.imis.fusion.fetcher.geometry.exceptions
+gr.athenainnovation.imis.fusion.fetcher.geometry.parsers
+gr.athenainnovation.imis.fusion.fetcher.geometry.writers
+gr.athenainnovation.imis.fusion.fetcher.gui
+gr.athenainnovation.imis.fusion.fetcher.gui.listeners
+gr.athenainnovation.imis.fusion.fetcher.gui.workers
+gr.athenainnovation.imis.fusion.fetcher.rules
+gr.athenainnovation.imis.fusion.fetcher.rules.parser

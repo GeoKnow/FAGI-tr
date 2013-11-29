@@ -1,0 +1,13 @@
+###################
+Class hierarchy
+###################
+
+-- GeometryProcessor
+	-- AbstractCRSParser
+	-- interface GeometryParser
+	-- interface GeometryWriter
+	
+
+###################
+
+Each geometry type (currently Lat/Long, WKT, GML, Easting/Northing) is represented by a class that extends GeometryProcessor. This class contains references to extensions/implementations of AbstractCRSParser, GeometryParser, GeometryWriter that provide implementations for parsing the CRS, parsing a geometry and writing a geometry of the respective type. All geometry processing functionality is exposed via public methods in the processor class.
