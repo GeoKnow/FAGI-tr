@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -72,8 +72,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="sourceRemoteCheckbox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="sourceDatasetStatusLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
@@ -123,10 +122,7 @@
                       <Component id="sourceGraphField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="sourceRemoteCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="sourceDatasetStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="sourceDatasetStatusLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -159,17 +155,14 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="sourceEndpointField">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="http://localhost:8890/sparql"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="sourceGraphField">
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="sourceRemoteCheckbox">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remote"/>
+            <Property name="text" type="java.lang.String" value="http://localhost:8890/wikimapia_points"/>
           </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="sourceRemoteCheckboxItemStateChanged"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sourceRemoteCheckboxActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="sourceDatasetStatusLabel">
           <Properties>
@@ -182,10 +175,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="sourceDatasetUnmodLocalGraphField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="DatasetPanel_sourceDatasetUnmodLocalGraphField"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -193,10 +185,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="sourceDatasetModLocalGraphField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
@@ -234,8 +222,7 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="targetRemoteCheckbox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="targetDatasetStatusLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -245,7 +232,7 @@
                           </Group>
                           <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="targetDatasetUnmodLocalGraphField" max="32767" attributes="0"/>
+                              <Component id="targetDatasetUnmodLocalGraphField" pref="469" max="32767" attributes="0"/>
                               <Component id="targetDatasetModLocalGraphField" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -272,11 +259,8 @@
                       <Component id="targetGraphLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="targetGraphField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="targetRemoteCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="targetDatasetStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                  <Component id="targetDatasetStatusLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -304,6 +288,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="targetEndpointField">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="http://localhost:8890/sparql"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="targetGraphLabel">
           <Properties>
@@ -311,15 +298,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="targetGraphField">
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="targetRemoteCheckbox">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remote"/>
+            <Property name="text" type="java.lang.String" value="http://localhost:8890/wikimapia_points"/>
           </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="targetRemoteCheckboxItemStateChanged"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="targetRemoteCheckboxActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="targetDatasetStatusLabel">
           <Properties>
@@ -332,10 +313,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="targetDatasetUnmodLocalGraphField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -343,10 +320,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="targetDatasetModLocalGraphField">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
@@ -442,6 +415,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="dbUsernameField">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="dba"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
@@ -449,6 +425,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="dbPasswordField">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="dba"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

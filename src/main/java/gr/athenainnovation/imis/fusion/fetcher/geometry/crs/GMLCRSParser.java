@@ -18,7 +18,7 @@ public class GMLCRSParser extends AbstractCRSParser {
     
     @Override
     public GeometryCRS parseCRS(final Map<String,Variable> objectVariableMap) {
-        final String crsString = extractCRSString(objectVariableMap);
+        final String crsString = extractCRSString(objectVariableMap);      
         return parseCRSString(crsString);
     }
     
@@ -36,7 +36,6 @@ public class GMLCRSParser extends AbstractCRSParser {
         
         if(gmlSerialisation.isPresent()) {
             final String crsString = getSRSName(gmlSerialisation.get());
-            
             return crsString;
         }
         throw new CRSParseException("Failed to parse CRS from GML geometry.");
@@ -56,11 +55,11 @@ public class GMLCRSParser extends AbstractCRSParser {
             }
         }
         
-        //Fallback
+        //Fallback               
         if(geometryCRS == null) {
             geometryCRS = new GeometryCRS("EPSG", 4326, true);
         }
-        
+              
        return geometryCRS;
     }
     

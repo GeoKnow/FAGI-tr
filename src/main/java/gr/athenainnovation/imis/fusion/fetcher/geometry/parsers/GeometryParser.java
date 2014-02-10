@@ -5,7 +5,7 @@ import gr.athenainnovation.imis.fusion.fetcher.rules.Variable;
 import java.util.Map;
 
 /**
- * Interface for parsing geometry to internal reprsentation.
+ * Interface for parsing geometry to internal representation.
  * @author Thomas Maroulis
  */
 public interface GeometryParser {

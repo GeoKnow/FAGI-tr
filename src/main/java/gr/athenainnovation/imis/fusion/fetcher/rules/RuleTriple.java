@@ -15,6 +15,11 @@ public class RuleTriple {
      * Variable type representing a variable whose value will be a WKT geometry literal.
      */
     public static final String WKT = "&wkt";
+     /**
+     * Variable type representing a variable whose value will be a WKT geometry literal.
+     */
+    public static final String GEORSS = "&georss";
+    
     /**
      * Variable type representing a variable whose value will be a GML geometry literal.
      */
@@ -44,7 +49,7 @@ public class RuleTriple {
      */
     public static final String NORTHING = "&north";
     /**
-     * Variable type reprsenting a variable whose value will have no special meaning attached to it.
+     * Variable type representing a variable whose value will have no special meaning attached to it.
      */
     public static final String GENERIC = "generic";
 

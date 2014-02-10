@@ -19,8 +19,8 @@ public class LatLongWriter implements GeometryWriter {
     
     @Override
     public Map<String, Variable> writeGeometry(final Geometry geometry, final GeometryCRS geometryCRS, final Map<String, Variable> objectVariableMap) throws RuntimeException {
-        if(!(geometry instanceof Point)) {
-            throw new IllegalArgumentException("Lat/Long writer given non-point geometry.");
+        if(!(geometry instanceof Point)) {                       
+            throw new IllegalArgumentException("Lat/Long writer given non-point geometry.");        
         }
         if(geometryCRS != null && !( "EPSG".equals(geometryCRS.getAuthority()) && geometryCRS.getSRID() == 4326 && !geometryCRS.isLongitudeFirst())) {
             throw new IllegalArgumentException("Lat/Long writer only accepts EPSG:4326.");

@@ -39,7 +39,7 @@ public class GeometryProcessor {
      * @param objectVariableMap geometry literal variable map
      * @return geometry
      */
-    public Geometry parseGeometry(final Map<String, Variable> objectVariableMap) {
+    public Geometry parseGeometry(final Map<String, Variable> objectVariableMap) {;
         return geometryParser.parseGeometry(objectVariableMap);
     }
 
@@ -51,7 +51,7 @@ public class GeometryProcessor {
      * @throws IllegalStateException if no CRS has been specified
      */
     public Map<String, Variable> writeGeometry(final Geometry geometry, final Map<String, Variable> objectVariableMap) throws IllegalStateException {
-        if(geometryCRSSet) {
+        if(geometryCRSSet) {                                            
             return geometryWriter.writeGeometry(geometry, geometryCRS, objectVariableMap);
         }
         else {

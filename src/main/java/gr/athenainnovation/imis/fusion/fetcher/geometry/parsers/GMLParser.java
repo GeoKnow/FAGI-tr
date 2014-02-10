@@ -29,6 +29,7 @@ public class GMLParser implements GeometryParser {
         for(Entry<String, Variable> varEntry: objectVariableMap.entrySet()) {
             if(RuleTriple.GML.equals(varEntry.getValue().getType())) {
                 gmlSerialisation = varEntry.getValue().getContent();
+
             }
             else {
                 LOG.info("Found non GML type variable. Ignoring. Type found: " + varEntry.getValue().getType());
@@ -73,13 +74,13 @@ public class GMLParser implements GeometryParser {
         
         String localSerialisation = serialisation.trim();
         
-        final int indexOfFirstGMLStart= localSerialisation.indexOf("<gml:");
+        final int indexOfFirstGMLStart = localSerialisation.indexOf("<gml:");
         final int indexOfFirstGMLEnd = localSerialisation.indexOf('>', indexOfFirstGMLStart);
         
         if(!localSerialisation.substring(indexOfFirstGMLStart, indexOfFirstGMLEnd).contains(xmlns)) {
             localSerialisation = localSerialisation.substring(0, indexOfFirstGMLEnd) + " " + xmlns + localSerialisation.substring(indexOfFirstGMLEnd);
         }
-        
+
         return localSerialisation;
     }
 }

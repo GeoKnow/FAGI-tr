@@ -10,6 +10,7 @@ import gr.athenainnovation.imis.fusion.fetcher.gui.listeners.RuleListener;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.Dataset;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.FetcherWorker;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.MatchedRule;
+import gr.athenainnovation.imis.fusion.fetcher.rules.parser.RuleQueryUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
@@ -21,6 +22,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 import org.apache.log4j.Logger;
+import virtuoso.jena.driver.VirtGraph;
+import virtuoso.jena.driver.VirtuosoUpdateFactory;
+import virtuoso.jena.driver.VirtuosoUpdateRequest;
 
 /**
  * Fetcher/transformer panel.
@@ -30,7 +34,7 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
     private static final Logger LOG = Logger.getLogger(FetcherTransformerPanel.class);
     
     private Map<String, MatchedRule> sourceMatchedRules, targetMatchedRules;
-    private Dataset sourceDataset, targetDataset;
+    private Dataset sourceDataset, targetDataset, dataset; //+dataset
     
     private final MessageListener messageListener;
     
@@ -370,6 +374,8 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
 
     private void fetchDatasetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fetchDatasetsButtonActionPerformed
         
+        clearGraphs();
+        
         Optional<MatchedRule> targetRule;
         if(transformationToggle.isSelected()) {
             targetRule = Optional.absent();
@@ -401,17 +407,12 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
         
         FetcherWorker sourceFetcherWorker = new FetcherWorker(this, sourceDataset, sourceMatchedRules, targetRule) {
             @Override
-            protected void done() {
+            protected void done() {               
                 // Call get despite return type being Void to prevent SwingWorker from swallowing exceptions
-                try {
-                    get();
-                    
-                    if(!sourceDataset.isRemote()) {
-                        sourceDatasetDoneField.setText("Source dataset transformed.");
-                    }
-                    else {
-                        sourceDatasetDoneField.setText("Source dataset transformed and fetched locally.");
-                    }
+               try {
+                    get();                                                       
+                    sourceDatasetDoneField.setText("Source dataset transformed and fetched locally.");
+                     
                 }
                 catch (InterruptedException | RuntimeException ex) {
                     LOG.warn(ex.getMessage());
@@ -423,7 +424,7 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
                     messageListener.printMessageDialogue("Error", ex.getCause().getMessage(), JOptionPane.ERROR_MESSAGE);
                     sourceDatasetDoneField.setText("Worker terminated abnormally.");
                 }
-                
+
                 LOG.info("Source fetcher worker has terminated.");
             }
         };
@@ -442,13 +443,8 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
                 // Call get despite return type being Void to prevent SwingWorker from swallowing exceptions
                 try {
                     get();
+                    targetDatasetDoneField.setText("Target dataset transformed and fetched locally.");
                     
-                    if(!targetDataset.isRemote()) {
-                        targetDatasetDoneField.setText("Target dataset transformed.");
-                    }
-                    else {
-                        targetDatasetDoneField.setText("Target dataset transformed and fetched locally.");
-                    }
                 }
                 catch (InterruptedException | RuntimeException ex) {
                     LOG.warn(ex.getMessage());
@@ -483,7 +479,41 @@ public class FetcherTransformerPanel extends javax.swing.JPanel implements RuleL
         sourceFetcherWorker.execute();
         targetFetcherWorker.execute();
     }//GEN-LAST:event_fetchDatasetsButtonActionPerformed
-
+    
+    //clear local graphs before executing new fetch and transform with different rule
+    private void clearGraphs (){
+        try{
+           VirtGraph conn = getVirtuosoConnection(sourceDataset.getDBConnectionParameters().getUrl(), 
+                   sourceDataset.getDBConnectionParameters().getUsername(), sourceDataset.getDBConnectionParameters().getPassword());          
+          
+            String clearSourceUnmodifiedGraph = RuleQueryUtils.clearGraphQuery(sourceDataset.getUnmodifiedLocalGraph());
+            String clearSourceTransformedGraph = RuleQueryUtils.clearGraphQuery(sourceDataset.getTransformedLocalGraph());
+        
+            String clearTargetUnmodifiedGraph = RuleQueryUtils.clearGraphQuery(targetDataset.getUnmodifiedLocalGraph());
+            String clearTargetTransformedGraph = RuleQueryUtils.clearGraphQuery(targetDataset.getTransformedLocalGraph());
+        
+            VirtuosoUpdateRequest vurSourceUnmodified = VirtuosoUpdateFactory.create(clearSourceUnmodifiedGraph, conn);
+            vurSourceUnmodified.exec();        
+            VirtuosoUpdateRequest vurSourceTransformed = VirtuosoUpdateFactory.create(clearSourceTransformedGraph, conn);
+            vurSourceTransformed.exec();
+        
+            VirtuosoUpdateRequest vurTargetUnmodified = VirtuosoUpdateFactory.create(clearTargetUnmodifiedGraph, conn);
+            vurTargetUnmodified.exec();        
+            VirtuosoUpdateRequest vurTargetTransformed = VirtuosoUpdateFactory.create(clearTargetTransformedGraph, conn);
+            vurTargetTransformed.exec();                
+        }
+        catch (com.hp.hpl.jena.update.UpdateException ex) {
+        LOG.warn(ex.getMessage(), ex);
+        throw new RuntimeException(ex);
+        }      
+    }
+    
+    //VirtGraph conn used for clearGraphs
+    private VirtGraph getVirtuosoConnection (String url, String username, String password){
+        VirtGraph conn = new VirtGraph ("jdbc:virtuoso://" + url + "/CHARSET=UTF-8", username, password);
+        return conn;
+    }
+    
     private void transformationToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transformationToggleActionPerformed
         JToggleButton toggle = (JToggleButton) evt.getSource();
         rulesTable.setEnabled(!toggle.isSelected());

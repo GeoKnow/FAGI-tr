@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import org.apache.log4j.Logger;
 
+
 /**
  * Application entrypoint
  * @author Thomas Maroulis
@@ -20,11 +21,11 @@ public class FetcherGUI extends javax.swing.JFrame implements MessageListener {
     private MatcherPanel sourceMatcherPanel, targetMatcherPanel;
     private FetcherTransformerPanel fetcherTransformerPanel;
     
-    private static final int SCROLL_INCREMENT = 20;
+    private static final int SCROLL_INCREMENT = 20;    
 
     public FetcherGUI() {
         config = new RuleConfig();
-        initComponents();
+        initComponents();     
     }
 
     private javax.swing.JTabbedPane JTabbedPane;
@@ -92,7 +93,8 @@ public class FetcherGUI extends javax.swing.JFrame implements MessageListener {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) {  
+                    
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }

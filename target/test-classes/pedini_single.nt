@@ -13,3 +13,10 @@ _:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe <http://www.w3.org/1999/02/22-rdf-syntax-
 <http://linkedgeodata.org/triplify/node162150121> <http://www.opengis.net/ont/geosparql#hasGeometry> _:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe .
 _:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.opengis.net/ont/sf#Point> .
 _:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe <http://www.opengis.net/ont/geosparql#asWKT> "POINT(20.8579419 39.610261)"^^<http://www.opengis.net/ont/geosparql#wktLiteral> .
+<http://dbpedia.org/resource/Roebuck_Stadium> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "36.282752"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://dbpedia.org/resource/Roebuck_Stadium> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-76.219025"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<http://dbpedia.org/resource/Test_Stadium> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> "36.282752" .
+<http://dbpedia.org/resource/Test_Stadium> <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-76.219025" .
+
+<http://dbpedia.org/resource/Falklands_War> <http://www.georss.org/georss/point> "-48.5 -53.75"@en .

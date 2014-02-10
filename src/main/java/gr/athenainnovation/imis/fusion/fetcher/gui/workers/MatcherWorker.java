@@ -42,13 +42,13 @@ public class MatcherWorker extends SwingWorker<Map<String, MatchedRule>, Void>{
         Map<String, MatchedRule> matchedRulesMap = new HashMap<>();
         int rulesExecuted = 0;
         
+        //long beginCountTime = System.nanoTime(); //begin counting of rule maching time
         for(String ruleID : rules.keySet()) {
             try {                
                 final RulePatternParser rulePatternParser = new RulePatternParser(rules.get(ruleID));
-                final RulePattern rulePattern = rulePatternParser.getRulePattern();
-                
+                final RulePattern rulePattern = rulePatternParser.getRulePattern();             
                 int count = matcher.getRuleMatchCount(RuleQueryUtils.formCountDistinctQuery(rulePattern));
-
+                                           
                 MatchedRule matchedRule = new MatchedRule(rules.get(ruleID));
                 matchedRule.setTimesMatched(Optional.of(count));
                 
@@ -75,6 +75,9 @@ public class MatcherWorker extends SwingWorker<Map<String, MatchedRule>, Void>{
             
             setProgress(++rulesExecuted);
         }
+        //long endCountTime = System.nanoTime(); //begin counting of rule maching time
+        //double countElapsedTime = (endCountTime - beginCountTime)/1E9; // /in seconds
+        //System.out.println("COUNT elapsed time:   " + countElapsedTime);
         
         return matchedRulesMap;
     }

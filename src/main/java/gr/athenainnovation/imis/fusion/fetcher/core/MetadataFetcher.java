@@ -5,6 +5,7 @@ import gr.athenainnovation.imis.fusion.fetcher.gui.workers.Dataset;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.FetcherWorker;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.MatchedRule;
 import gr.athenainnovation.imis.fusion.fetcher.rules.RuleTriple;
+//import virtuoso.jdbc3;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,11 +20,15 @@ import org.apache.log4j.Logger;
 import virtuoso.jdbc4.VirtuosoExtendedString;
 import virtuoso.jdbc4.VirtuosoRdfBox;
 import virtuoso.jdbc4.VirtuosoResultSet;
+//VirtGraph
+import virtuoso.jena.driver.VirtGraph;
+import virtuoso.jena.driver.VirtuosoUpdateFactory;
+import virtuoso.jena.driver.VirtuosoUpdateRequest;
 
 /**
  *  This class is responsible for fetching all metadata triples (non geometry related) from a source dataset and copying them first to the specified by the dataset local unmodified graph and second, if the
  *  populateTransformationGraph flag is set, to the local transformed graph.
- * @author Thomas Maroulis
+ *  @author Thomas Maroulis
  */
 public class MetadataFetcher {
     private final static Logger LOG = Logger.getLogger(MetadataFetcher.class);
@@ -39,19 +44,20 @@ public class MetadataFetcher {
     private Integer totalCount;
     private Integer count = 1;
     
-    private boolean populateTransformedGraph = false;
+    private boolean populateTransformedGraph = false; //true if targetRule is Present
+    //private boolean blankNodeTripleIsToBeExcluded = false; //true if blank node from unmodified graph does not need to be copied in the transformed
 
     /**
      *  Constructs a new instance of MetadataFetcher tied to a specific dataset. linked nodes list and with the specified populateTransformationGraph flag.
      * @param dataset a dataset object containing all information pertaining to source and destination datasets.
      * @param callback callback
-     * @param populateTransformedGraph true if triples are to be copied to the transformated graph, false otherwise
+     * @param populateTransformedGraph true if triples are to be copied to the transformed graph, false otherwise
      * @param linkedNodes optional of a list of node URIs to be fetched. If absent all root nodes (as defined by the dataset) will be fetched.
      */
     public MetadataFetcher(final Dataset dataset, final FetcherWorker callback, final boolean populateTransformedGraph, final Optional<List<String>> linkedNodes) {
         this.callback = callback;
         this.dataset = dataset;
-        this.populateTransformedGraph =populateTransformedGraph;
+        this.populateTransformedGraph = populateTransformedGraph;
         this.linkedNodes = linkedNodes;
     }
     
@@ -99,8 +105,14 @@ public class MetadataFetcher {
             selectQuery = formSelectQuery(restriction);
         }
         
-        try (Statement statement = conn.createStatement();
-                VirtuosoResultSet resultSet = (VirtuosoResultSet) statement.executeQuery(selectQuery)) {
+        //virtuoso connection
+        VirtGraph vConn = getVirtuosoConnection(dataset.getDBConnectionParameters().getUrl(), 
+        dataset.getDBConnectionParameters().getUsername(), dataset.getDBConnectionParameters().getPassword());        
+        
+        long metadataStartTime = System.nanoTime();    
+        try (Statement statement = conn.createStatement();       
+                
+        VirtuosoResultSet resultSet = (VirtuosoResultSet) statement.executeQuery(selectQuery)) {
             while(resultSet.next()) {
                 callback.publishFetcherProgress((int) (0.5 + (100 * (double) count++ / (double) totalCount)));
                 
@@ -117,33 +129,42 @@ public class MetadataFetcher {
                 if(subjectContent.isEmpty() || predicateContent.isEmpty() || objectContent.isEmpty()) {
                     LOG.warn("Found empty value in triple: " + subjectContent + " | " + predicateContent + " | " + objectContent);
                 }
-                
+                             
                 String genericInsertQuery, specificInsertQuery;
                 
-                genericInsertQuery = formInsertQuery(dataset.getUnmodifiedLocalGraph());
-                specificInsertQuery = substituteVariableContentIntoQuery(genericInsertQuery, subjectContent, predicateContent, objectContent);
-                executeUpdateOnLocalDB(specificInsertQuery, conn);
-                
-                if(populateTransformedGraph) {
+                if(populateTransformedGraph){ 
+                    
                     genericInsertQuery = formInsertQuery(dataset.getTransformedLocalGraph());
+                    
+                    if (!blankNodeTripleIsToBeExcluded(subjectContent, objectContent)){
                     specificInsertQuery = substituteVariableContentIntoQuery(genericInsertQuery, subjectContent, predicateContent, objectContent);
-                    executeUpdateOnLocalDB(specificInsertQuery, conn);
+                    
+                    //executeUpdateOnLocalDB(specificInsertQuery, conn);                    
+                    executeUpdateOnLocalDB2(specificInsertQuery, vConn);
+                    }
+
                 }
             }
-        }
+            long metadataEndTime = System.nanoTime();
+            double metadataElapsedTime = (metadataEndTime - metadataStartTime)/1E9;
+            System.out.println("METADATA elapsed time:   " + metadataElapsedTime);
+        }        
         catch (SQLException ex) {
             LOG.warn(ex.getMessage() + " | " + selectQuery, ex);
             callback.printExceptionMessage(ex.getMessage() + " | " + selectQuery);
         }
     }
     
-    private void executeUpdateOnLocalDB(String updateQuery, Connection conn) {
-        try (Statement statement = conn.createStatement()) {
-            statement.executeUpdate(updateQuery);
+    //execute on localDB 2
+    private void executeUpdateOnLocalDB2(String specificInsertQuery, VirtGraph vConn) {
+        try{
+        VirtuosoUpdateRequest vur = VirtuosoUpdateFactory.create(specificInsertQuery, vConn);
+        vur.exec();
         }
-        catch (SQLException ex) {
-            LOG.warn(ex.getMessage() + " | " + updateQuery, ex);
-            callback.printExceptionMessage(ex.getMessage() + " | " + updateQuery);
+        catch (com.hp.hpl.jena.update.UpdateException ex){
+            LOG.warn(ex.getMessage(), ex);
+            callback.printExceptionMessage(ex.getMessage());
+            //throw new RuntimeException(ex);
         }
     }
     
@@ -195,11 +216,16 @@ public class MetadataFetcher {
     }
     
     private Connection getConnectionToDB(String url, String username, String password) throws SQLException, ClassNotFoundException {
-        String urlDB = "jdbc:virtuoso://" + url + "/CHARSET=UTF-8";
-        
         Class.forName("virtuoso.jdbc4.Driver");
+        String urlDB = "jdbc:virtuoso://" + url + "/CHARSET=UTF-8";               
         return DriverManager.getConnection(urlDB, username, password);
     }
+    
+        private VirtGraph getVirtuosoConnection (String url, String username, String password){
+        VirtGraph Vconn = new VirtGraph ("jdbc:virtuoso://" + url + "/CHARSET=UTF-8", username, password);
+        return Vconn;
+    }
+
     
     private String getGeometryExclusionQueryRestriction(Map<String, MatchedRule> matchedRules, String graph) {        
         String restriction = "FROM <" + graph + "> WHERE { ?s ?p ?o . ";
@@ -207,14 +233,21 @@ public class MetadataFetcher {
         for(MatchedRule matchedRule : matchedRules.values()) {
             if(matchedRule.getTimesMatched().isPresent() && matchedRule.getTimesMatched().get() > 0) {
                 RuleTriple firstTriple = matchedRule.getRule().getTriples()[0];
+                //check for predicate in the second triple of the rule, to be filtered out
+                if (matchedRule.getRule().getTriples().length > 1){
+                   RuleTriple secondTriple = matchedRule.getRule().getTriples()[1]; 
+
+                   String regex = "\"" + secondTriple.getPredicate().trim().substring(1, secondTriple.getPredicate().trim().length()-1) + "\"";
+                   restriction = restriction.concat("FILTER (!regex(?p, " + regex + ", \"i\")) ");
+                }//this if is to be expanded to work with rules that have more triple predicates to exclude
 
                 String regex = "\"" + firstTriple.getPredicate().trim().substring(1, firstTriple.getPredicate().trim().length()-1) + "\"";
                 restriction = restriction.concat("FILTER (!regex(?p, " + regex + ", \"i\")) ");
+                
             }
         }
         
         restriction = restriction.concat("}");
-        
         return restriction;
     }
     
@@ -226,30 +259,34 @@ public class MetadataFetcher {
         return "SPARQL SELECT ?s ?p ?o " + restriction;
     }
     
-    private String formInsertQuery(String graph) {
-        return "SPARQL WITH <" + graph + "> INSERT { ?s ?p ?o } WHERE {}";
+    private String formInsertQuery(String graph) {               
+        //return "SPARQL WITH  <" + graph + "> INSERT { ?s ?p ?o } WHERE {}";
+        return "INSERT INTO GRAPH  <" + graph + "> { ?s ?p ?o }"; 
     }
     
-    private String substituteVariableContentIntoQuery(String query, String subject, String predicate, String object) {
+    private String substituteVariableContentIntoQuery(String query, String subject, String predicate, String object) {                     
+        
         query = query.replace(SUBJECT_VAR, subject);
         query = query.replace(PREDICATE_VAR, predicate);
         query = query.replace(OBJECT_VAR, object);
         return query;
     }
     
+    
+    private boolean blankNodeTripleIsToBeExcluded(String subject, String object){
+        return subject.contains("nodeID://b");
+    }
+
     private String virtuosoDatatypeToString(Object object) {
         if(object instanceof VirtuosoExtendedString) {
             VirtuosoExtendedString vs=  (VirtuosoExtendedString) object;
-            
             if (vs.iriType == VirtuosoExtendedString.IRI && (vs.strType & 0x01) == 0x01) {
                 return "<" + vs.str +">";
             }
             else if (vs.iriType == VirtuosoExtendedString.BNODE) { 
                 return "<" + vs.str +">";
             }
-            else {
-                return "";
-            }
+            else return "\""+vs.str+"\"";
         }
         else if(object instanceof VirtuosoRdfBox) {
             VirtuosoRdfBox rb = (VirtuosoRdfBox) object;

@@ -42,6 +42,7 @@ public class CRSTranformer {
      * @return transformed geometry
      */
     public static Optional<Geometry> transformToGivenCRS(Optional<Geometry> geometry, GeometryCRS geometryCRS) {
+        //System.out.println("transformToGivenCRS  " + transform(geometry, INTERNAL_CODE_CRS, geometryCRS));
         return transform(geometry, INTERNAL_CODE_CRS, geometryCRS);
     }
     
@@ -57,7 +58,6 @@ public class CRSTranformer {
             MathTransform mathTransform = CRS.findMathTransform(sourceCRS, targetCRS, true);
             
             geometry = Optional.fromNullable(JTS.transform(geometry.get(), mathTransform));
-            
             return geometry;
         }
         catch (TransformException | FactoryException ex) {

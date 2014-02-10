@@ -1,0 +1,4 @@
+<http://linkedgeodata.org/triplify/node162150121> <http://www.opengis.net/ont/geosparql#defaultGeometry> _:BX2D1737316aX3A13fd28bf7e5X3AX2D7fff .
+_:BX2D1737316aX3A13fd28bf7e5X3AX2D7fff <http://www.opengis.net/ont/geosparql#asGML> "<gml:Point srsName=\"EPSG:4326\"><gml:coordinates>20.8579419,39.610261000000001</gml:coordinates></gml:Point>"^^<http://www.opengis.net/ont/geosparql#gmlLiteral> .
+
+

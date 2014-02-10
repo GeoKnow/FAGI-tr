@@ -16,3 +16,6 @@
 # End of triple chain is denoted by full stop. During regex matching case is ignored.
 
 # Add custom rules here
+#custom test
+#<u_testgeo> "Matches_test" 1
+#?x {http://www.georss.org/georss/point} "(-*[0-9]\s*-*[0-9])+\." .

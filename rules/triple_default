@@ -36,16 +36,27 @@ _:a <p_wgs84_lat_long> <o_lat_long> .
 
 # ## GeoSPARQL ##
 
+#wkt test
 <d_geosparql_wkt> "Matches_GeoSPARQL_with_WKT_serialisation." 2
-?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
-_:a "(^http://www.opengis.net/ont/geosparql#asWKT$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_wkt> .
+?x <p_geo1> _:a
+_:a <p_geo2> <o_wkt> .
 
-<d_geosparql_gml> "Matches_GeoSPARQL_with_GML_serialisation." 2
-?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
-_:a "(^http://www.opengis.net/ont/geosparql#asGML$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_gml> .
+#<d_geosparql_wkt> "Matches_GeoSPARQL_with_WKT_serialisation." 2
+#?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
+#_:a "(^http://www.opengis.net/ont/geosparql#asWKT$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_wkt> .
+
+#georss#
+<d_georss> "Matches_Georss_in_a_single_triple" 1
+#?x {http://www.georss.org/georss/point} <o_georss> .
+?x <p_georss> <o_georss> .
+
+#commented out temporarily
+#<d_geosparql_gml> "Matches_GeoSPARQL_with_GML_serialisation." 2
+#?x "(^http://www.opengis.net/ont/geosparql#hasGeometry$|^http://www.opengis.net/ont/geosparql#defaultGeometry$)" _:a
+#_:a "(^http://www.opengis.net/ont/geosparql#asGML$|^http://www.opengis.net/ont/geosparql#hasSerialization$)" <o_gml> .
 
 
 # ##PostGIS-Import Rule ##
-<d_postgis_importer> "This_rule_is_intended_for_transforming_geometries_into_the_format_expected_by_the_PostGIS_importer." 2
-?x {http://www.opengis.net/ont/geosparql#hasGeometry} _:a
-_:a {http://www.opengis.net/ont/geosparql#asWKT} <o_wkt>
+#<d_postgis_importer> "This_rule_is_intended_for_transforming_geometries_into_the_format_expected_by_the_PostGIS_importer." 2
+#?x {http://www.opengis.net/ont/geosparql#hasGeometry} _:a
+#_:a {http://www.opengis.net/ont/geosparql#asWKT} <o_wkt>

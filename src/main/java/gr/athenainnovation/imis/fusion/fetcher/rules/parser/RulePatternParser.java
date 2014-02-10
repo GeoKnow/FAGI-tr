@@ -12,6 +12,7 @@ import java.util.Map;
  * @author Thomas Maroulis
  */
 public class RulePatternParser {
+     
     private static final String DOT = " . ";
     
     private String triplePattern = "";
@@ -28,7 +29,8 @@ public class RulePatternParser {
      *
      * @param rule rule
      */
-    public RulePatternParser(final Rule rule) {
+    public RulePatternParser(final Rule rule) {    
+        //gets constructed for every rule, after the begining of rule matching
         if(rule == null) {
             throw new IllegalArgumentException("Rule cannot be null.");
         }
@@ -36,12 +38,12 @@ public class RulePatternParser {
         rulePattern = new RulePattern();
         
         for(RuleTriple triple : rule.getTriples()) {
-            formTriple(triple);
+            formTriple(triple);           
         }
         
-        final String selectPattern = triplePattern + " " + filterPattern;
+        final String selectPattern = triplePattern + " " + filterPattern; 
         final String updatePattern = triplePattern;
-        
+       
         rulePattern.setSelectPattern(selectPattern);
         rulePattern.setUpdatePattern(updatePattern);
     }
@@ -99,13 +101,11 @@ public class RulePatternParser {
     private void addObject(final String object, final String datatype, final String type) {
         // Check if object is an anon node (":_"), a variable ("?"), a special value ("&") or a regex ("\"" ... "\"")
         if(isAnon(object)) {
-            triplePattern = triplePattern.concat(object + DOT);
-
+            triplePattern = triplePattern.concat(object + DOT);           
             addDatatypeFilter(object, datatype);
         }
         else if(isVariable(object)) {
             triplePattern = triplePattern.concat(object + DOT);
-            
             final Map<String,Variable> objectVars = rulePattern.getObjectVariables();
             objectVars.put(object, new Variable(object, type));
             rulePattern.setObjectVariables(objectVars);
@@ -122,6 +122,7 @@ public class RulePatternParser {
     }
 
     private void addURI(final String uri) {
+        //replace { } with < > in uri 
         triplePattern = triplePattern.concat("<" + uri.substring(1, uri.length()-1) + "> ");
     }
 
@@ -137,7 +138,8 @@ public class RulePatternParser {
     private void addObjectRegex(final String regex, final String datatype, final String type) {
         final String newVariable = NEW_VARIABLE_PREFIX + newVariableIndex++;
         triplePattern = triplePattern.concat(newVariable + " ");
-        filterPattern = filterPattern.concat("FILTER regex(" + newVariable + ", " + regex + ", \"i\") ");
+        // origin filterPattern = filterPattern.concat("FILTER regex(" + newVariable + ", " + regex + ", \"i\") ");
+        filterPattern = filterPattern.concat("FILTER regex(str(" + newVariable + "), " + regex + ", \"i\") ");
         
         addDatatypeFilter(newVariable, datatype);
         

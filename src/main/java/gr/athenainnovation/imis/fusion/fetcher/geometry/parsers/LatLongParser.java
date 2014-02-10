@@ -39,6 +39,7 @@ public class LatLongParser implements GeometryParser {
                 case RuleTriple.LAT_LONG:
                     final Optional<String> content = varEntry.getValue().getContent();
                     if(content.isPresent()) {
+
                         final String[] splitContent = content.get().split("(\\s|,)");
                         if(splitContent.length < 2) {
                             throw new NumberFormatException("Failed to split lat/long pair: " + content.get());

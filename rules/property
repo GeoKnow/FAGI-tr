@@ -9,6 +9,12 @@
 
 <p_geo> "^.*geo[^/]*$"
 <p_lat_long> "^.*[lat|long][^/]*$"
+<p_georss> {http://www.georss.org/georss/point}
+
+#wkt properties
+<p_geo1> {http://www.opengis.net/ont/geosparql#hasGeometry}
+<p_geo2> {http://www.opengis.net/ont/geosparql#asWKT}
+# test
 
 <p_wgs84_lat> {http://www.w3.org/2003/01/geo/wgs84_pos#lat}
 <p_wgs84_long> {http://www.w3.org/2003/01/geo/wgs84_pos#long}

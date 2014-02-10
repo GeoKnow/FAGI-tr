@@ -35,10 +35,10 @@ public class WKTParser implements GeometryParser{
                 LOG.info("Found non WKT type variable. Ignoring. Type found: " + varEntry.getValue().getType());
             }
         }
-        
+
         if(wktSerialisation.isPresent()) {
             final GeometryCRS geometryCRS = new WKTCRSParser().parseCRS(objectVariableMap);
-            final Optional<Geometry> parsedGeom = parse(wktSerialisation.get(), geometryCRS);
+            final Optional<Geometry> parsedGeom = parse(wktSerialisation.get(), geometryCRS);           
             if(parsedGeom.isPresent()) {
                 return parsedGeom.get();
             }
@@ -54,7 +54,7 @@ public class WKTParser implements GeometryParser{
             wktString = localSerialisation.substring(localSerialisation.indexOf('>') + 1);
         }
         else {
-            wktString = localSerialisation;
+            wktString = localSerialisation; 
         }
         
         final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), geometryCRS.getSRID());
@@ -74,7 +74,7 @@ public class WKTParser implements GeometryParser{
         if(!geometry.isPresent()) {
             LOG.warn("Failed to parse WKT: " + wktString);
         }
-        
+
         return geometry;
     }
 }

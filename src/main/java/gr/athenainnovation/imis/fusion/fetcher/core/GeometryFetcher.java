@@ -17,14 +17,13 @@ import gr.athenainnovation.imis.fusion.fetcher.rules.RulePattern;
 import gr.athenainnovation.imis.fusion.fetcher.rules.Variable;
 import gr.athenainnovation.imis.fusion.fetcher.rules.parser.RulePatternParser;
 import gr.athenainnovation.imis.fusion.fetcher.rules.parser.RuleQueryUtils;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.log4j.Logger;
+import virtuoso.jena.driver.VirtGraph;
+import virtuoso.jena.driver.VirtuosoUpdateRequest;
+import virtuoso.jena.driver.VirtuosoUpdateFactory;
 
 /**
  * This class is responsible for fetching geometry related triples from a source dataset and then a). copying them to a local graph A, and b). transforming them according to a target rule and then entering
@@ -43,7 +42,7 @@ public class GeometryFetcher {
     private final Optional<List<String>> linkedNodes;
     
     /**
-     *  Constructs a new instance of GeometryFetcher tied to specific dataset, target rule and linked nodes list.
+     * Constructs a new instance of GeometryFetcher tied to specific dataset, target rule and linked nodes list.
      * @param dataset a dataset object containing all information pertaining to source and destination datasets.
      * @param targetRule optional of a rule for transforming geometric triples to. If absent only entries to the unmodified graph will take place and entries to the transformed graph will be omitted.
      * @param callback callback
@@ -68,11 +67,16 @@ public class GeometryFetcher {
      *  Fetches all triples matched by the given rule and then a). copies them into the unmodified graph, and b). transforms them according to the target rule and enters them into the transformed graph.
      * @param sourceMatchedRule rule for matching a set of triples in the source graph.
      */
-    public void fetchGeometries(final MatchedRule sourceMatchedRule) {        
+    
+    
+    //fetchGeometries with Virtuoso Insert Support ->fetchGeometriesHelper got VirtGraph conn parameter instead of Connection conn
+        public void fetchGeometries(final MatchedRule sourceMatchedRule) {  
+        
         final RulePatternParser rulePatternParser = new RulePatternParser(sourceMatchedRule.getRule());
         
-        try (Connection conn = getConnectionToDB(dataset.getDBConnectionParameters().getUrl(), 
-                    dataset.getDBConnectionParameters().getUsername(), dataset.getDBConnectionParameters().getPassword())) {
+        try{
+        VirtGraph conn = getVirtuosoConnection(dataset.getDBConnectionParameters().getUrl(), 
+                    dataset.getDBConnectionParameters().getUsername(), dataset.getDBConnectionParameters().getPassword());       
             
             if(linkedNodes.isPresent()) {
                 for(String subject : linkedNodes.get()) {
@@ -84,13 +88,16 @@ public class GeometryFetcher {
                 fetchGeometriesHelper(rulePatternParser, sourceMatchedRule, subject, conn);
             }
         }
-        catch (RuntimeException | SQLException | ClassNotFoundException ex) {
-            LOG.warn(ex.getMessage(), ex);
-            callback.printExceptionMessage(ex.getMessage());
+        catch (com.hp.hpl.jena.update.UpdateException ex){
+        LOG.warn(ex.getMessage(), ex);
+        callback.printExceptionMessage(ex.getMessage());
+        throw new RuntimeException(ex);
         }
-    }
-    
-    private void fetchGeometriesHelper(final RulePatternParser sourceRulePatternParser, final MatchedRule sourceMatchedRule, final Optional<String> subject, final Connection conn) {
+    }  
+        
+        
+    private void fetchGeometriesHelper(final RulePatternParser sourceRulePatternParser, final MatchedRule sourceMatchedRule, final Optional<String> subject, final VirtGraph conn) {
+
         RulePattern sourceRulePattern = sourceRulePatternParser.getRulePattern();
         String selectAllQuery = RuleQueryUtils.formSelectAllQuery(sourceRulePattern);
         
@@ -101,35 +108,53 @@ public class GeometryFetcher {
             
             selectAllQuery = selectAllQuery.replace(subjectVar.getName(), "<" + subject.get() + ">");
         }
-        
+                
         QueryExecution queryExecution = null;
         
+        //long selectStartTime;
         try {
+            
+            //writeUnmodified with second graph param
+            writeUnmodified2(dataset.getUnmodifiedLocalGraph(), conn, dataset.getGraph());
+            
             final Query query = QueryFactory.create(selectAllQuery);
             
             if(!dataset.getGraph().isEmpty()) {
-                queryExecution = QueryExecutionFactory.sparqlService(dataset.getEndpoint(), query, dataset.getGraph());
+                queryExecution = QueryExecutionFactory.sparqlService(dataset.getEndpoint(), query, dataset.getGraph());                
+                
+                //start select time
+                //selectStartTime = System.nanoTime();
             }
-            else {
+            else { 
+                //start select time
+                //selectStartTime = System.nanoTime();
                 queryExecution = QueryExecutionFactory.sparqlService(dataset.getEndpoint(), query);
-            }
-            
+            }           
+                
             final ResultSet resultSet = queryExecution.execSelect();
+            //end select time
+            //long selectEndTime = System.nanoTime();
+            
+            //double selectElapsedTime = (selectEndTime - selectStartTime)/1E9;
+            //System.out.println("SELECT elapsed time:   " + selectElapsedTime);
             
             QuerySolution querySolution;
-            
+            //start transform time
+            long transformStartTime = System.nanoTime();
             while(resultSet.hasNext()) {
-                querySolution = resultSet.next();
-                RulePattern rulePatternWithContent = getVariableContent(subject, sourceRulePattern, querySolution);
                 
-                if(dataset.isRemote()) {
-                    writeUnmodified(dataset.getUnmodifiedLocalGraph(), rulePatternWithContent, conn);
-                    writeTransformed(dataset.getTransformedLocalGraph(), rulePatternWithContent, sourceMatchedRule.getGeometryProcessor().get(), conn);
-                }
-                else {
-                    writeTransformed(dataset.getGraph(), rulePatternWithContent, sourceMatchedRule.getGeometryProcessor().get(), conn);
-                }
+                querySolution = resultSet.next();                                
+                RulePattern rulePatternWithContent = getVariableContent(subject, sourceRulePattern, querySolution);                
+                               
+                writeTransformed(dataset.getTransformedLocalGraph(), rulePatternWithContent, sourceMatchedRule.getGeometryProcessor().get(), conn);
+                      
             }
+            //transform ended time
+            long transformEndTime = System.nanoTime();
+            //elapsed time for transforming and writing to modified graph
+            double transformElapsedTime = (transformEndTime - transformStartTime)/1E9; //convert nanoseconds to seconds
+            System.out.println("Transform Elapsed time:\n" + transformElapsedTime);
+            
         }
         finally {
             if(queryExecution != null) {
@@ -138,44 +163,56 @@ public class GeometryFetcher {
         }
     }
     
-    private void writeUnmodified(String graph, RulePattern sourceRulePattern, Connection conn) {
-        String unmodifiedUpdateQueryString =RuleQueryUtils.formUpdateQuery(sourceRulePattern, graph);
-        executeUpdateOnLocalDB(unmodifiedUpdateQueryString, conn);
+    //writeUnmodified with second graph added
+    private void writeUnmodified2(String graph, VirtGraph conn, String fromGraph) {
+      String unmodifiedUpdateQueryString = RuleQueryUtils.formUpdateQueryForUnmodified(graph, fromGraph);
+      executeUpdateOnLocalDB2(unmodifiedUpdateQueryString, conn);
     }
+   
     
-    private void writeTransformed(String graph, RulePattern sourceRulePattern, GeometryProcessor sourceGeometryProcessor, Connection conn) {
+    //last argument became VirtGraph conn instead of Connection conn, executeUpdateOnLocalDB commented out
+    private void writeTransformed(String graph, RulePattern sourceRulePattern, GeometryProcessor sourceGeometryProcessor, VirtGraph conn) {
         if(targetRulePatternParser != null) {
             RulePattern targetRulePattern = targetRulePatternParser.getRulePattern();
             populateTargetPatternWithVariables(targetRulePattern, targetRuleGeometryProcessor, sourceRulePattern, sourceGeometryProcessor);
-            String updateQuery = RuleQueryUtils.formUpdateQuery(targetRulePattern, graph);
-            executeUpdateOnLocalDB(updateQuery, conn);
+            
+            String updateQuery = RuleQueryUtils.formUpdateQuery(targetRulePattern, graph);          
+
+            executeUpdateOnLocalDB2(updateQuery, conn);
+                 
         }
-    }
+    }                   
     
-    private void executeUpdateOnLocalDB(String updateQuery, Connection conn) {
-        try (Statement statement = conn.createStatement()) {
-            statement.executeUpdate(updateQuery);
-        }
-        catch (SQLException ex) {
-            LOG.warn(ex.getMessage() + " | " + updateQuery, ex);
-            callback.printExceptionMessage(ex.getMessage() + " | " + updateQuery);
-        }
-    }
-    
-    private Connection getConnectionToDB(String url, String username, String password) throws SQLException, ClassNotFoundException {
-        String urlDB = "jdbc:virtuoso://" + url + "/CHARSET=UTF-8";
-        
-        Class.forName("virtuoso.jdbc4.Driver");
-        return DriverManager.getConnection(urlDB, username, password);
+    //executeUpdateOnLocalDB
+    private void executeUpdateOnLocalDB2(String updateQuery, VirtGraph conn) {
+       try
+       {
+        VirtuosoUpdateRequest vur = VirtuosoUpdateFactory.create(updateQuery, conn);
+        vur.exec();
+       }
+       catch (com.hp.hpl.jena.update.UpdateException ex)
+       { 
+           LOG.warn(ex.getMessage() + " | " + updateQuery, ex);
+           callback.printExceptionMessage(ex.getMessage() + " | " + updateQuery);
+       }           
+               
+    }    
+
+    private VirtGraph getVirtuosoConnection (String url, String username, String password){
+        VirtGraph conn = new VirtGraph ("jdbc:virtuoso://" + url + "/CHARSET=UTF-8", username, password);
+        return conn;
     }
     
     private void populateTargetPatternWithVariables(RulePattern updateRulePattern, GeometryProcessor targetGeometryProcessor, RulePattern sourceRulePattern, GeometryProcessor sourceGeometryProcessor) {
         updateRulePattern.setSubjectVariable(sourceRulePattern.getSubjectVariable());
         
+        //source rule pattern
         updateRulePattern.setPredicateVariables(sourceRulePattern.getPredicateVariables());
         
         Geometry geometry = sourceGeometryProcessor.parseGeometry(sourceRulePattern.getObjectVariables());
+        
         updateRulePattern.setObjectVariables(targetGeometryProcessor.writeGeometry(geometry, updateRulePattern.getObjectVariables()));
+                
     }
     
     private RulePattern getVariableContent(final Optional<String> subject, final RulePattern sourceRulePattern, final QuerySolution querySolution) {
@@ -183,8 +220,8 @@ public class GeometryFetcher {
         
         setSubjectVariableContent(subject, rulePattern.getSubjectVariable(), querySolution);
         setPredicateVariableContent(rulePattern.getPredicateVariables(), querySolution);
-        setObjectVariableContent(rulePattern.getObjectVariables(), querySolution);
         
+        setObjectVariableContent(rulePattern.getObjectVariables(), querySolution);
         return rulePattern;
     }
     
@@ -206,6 +243,7 @@ public class GeometryFetcher {
             predicateVariable.setContent(Optional.fromNullable(predicateVariableContent));
             
             predicateVariableMap.put(varEntry.getKey(), predicateVariable);
+
         }
     }
     

@@ -25,7 +25,7 @@ public class WKTWriter implements GeometryWriter {
         if(!serialisation.isPresent()) {
             throw new GeometrySerialisationException("Failed to serialise geometry to WKT.");
         }
-        
+        //System.out.println("WKT SERIALIZATION:     " + serialisation);
         for(Entry<String, Variable> varEntry : objectVariableMap.entrySet()) {
             if(RuleTriple.WKT.equals(varEntry.getValue().getType())) {
                 final Variable variable = varEntry.getValue();

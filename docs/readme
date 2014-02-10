@@ -2,11 +2,10 @@ Datasets pane:
 	-- <Source/Target> Dataset
 		-- Endpoint: dataset endpoint URL
 		-- Graph: dataset graph URI
-		-- Remote: Specifies whether the dataset is remote and thus should be copied to the local Virtuoso server.
 		-- Root node namespace (regex): Regex for matching root node URIs (features of interest).
-		-- Local graph (unmodified): The URI of the local graph to which the dataset will be copied as is.
-		-- Local graph (transformed): The URI of the local graph to which the dataset will be copied with the geometries transformed.
-		
+		-- Local graph (unmodified): The URI of the local graph to which the dataset will be copied as is. 
+		-- Local graph (transformed): The URI of the local graph to which the dataset will be copied with the geometries transformed. 
+		   Local graphs get autocompleted if the user does not specify a name for them.
 		
 	-- Link file
 	Link file must be in the N-TRIPLES format and the contained links must be owl:sameAs links.
@@ -24,7 +23,7 @@ Datasets pane:
 <Source/Target> dataset matcher:
 		Provides functionality for parsing from file and then matching a set of rules against the respective dataset.
 		
-		-- Retain: If retain is checked then during fetching the respective rule will be used to copy geometry triples as they are in the unmodified local graph (if dataset is remote) and to enter the geometries transformed to the transformed local graph.	
+		-- Retain: If retain is checked then during fetching the respective rule will be used to copy geometry triples as they are in the unmodified local graph  and to enter the geometries transformed to the transformed local graph.	
 		
 #####################################################
 
@@ -41,10 +40,10 @@ Fetcher & Transformer pane:
 Use case:
 
 1). Set endpoint/graph/root node namespace for source and target datasets in the "dataset" pane.
-2). If a dataset is remote and must be copied to local Virtuoso db, check "Remote" and specify URIs for the unmodified and modified local graphs to which it is to be copied.
+2). Optionally set names for the Local graphs. If omitted the graphs will get a default name based on the original graph name.
 3). Set path to links file to fetch only specified nodes. Leave blank to fetch all nodes.
 4). Set Virtuoso db connection parameters.
-5). "Set"
+5). Press "Set".
 6). Match rules in the "source dataset matcher" and "target dataset matcher" panes.
 7). For each matched rule decided whether the geometry should be retained/transformed by checking "Retain".
 8). In the "Fetcher & Transformer" pane either disable geometry transformation or select rule to transform geometries to. Manually specify CRS to transform to or accept indicated values.

@@ -37,10 +37,11 @@ public class FetcherWorker extends SwingWorker<Void, Void> {
      */
     public FetcherWorker(final FetcherListener listener, final Dataset dataset, final Map<String, MatchedRule> matchedRulesMap, final Optional<MatchedRule> targetRule) {
         super();
+        
         this.listener = listener;
         this.dataset = dataset;
         this.matchedRulesMap = matchedRulesMap;
-        this.targetRule = targetRule;
+        this.targetRule = targetRule; 
     }
 
     @Override
@@ -50,18 +51,15 @@ public class FetcherWorker extends SwingWorker<Void, Void> {
             links = Optional.of(parseLinksFile(dataset.getLinksFIle(), dataset.isThisSetFirstInLinks()));
         }
         
-        if(dataset.isRemote()) {
-            final MetadataFetcher metadataFetcher = new MetadataFetcher(dataset, this, targetRule.isPresent(), links);
-            metadataFetcher.fetchMetadata(matchedRulesMap);
-        }
-        else {
-            fetcherProgress = 100;
-        }
+        //the following two commands replace the if-else statement    
+        final MetadataFetcher metadataFetcher = new MetadataFetcher(dataset, this, targetRule.isPresent(), links);
+        metadataFetcher.fetchMetadata(matchedRulesMap);
         
         final int totalTransformerCount = matchedRulesMap.size();
         int transformerCount = 1;
         
         final GeometryFetcher geometryFetcher = new GeometryFetcher(dataset, targetRule, this, links);
+                               
         for(MatchedRule matchedRule : matchedRulesMap.values()) {
             if(matchedRule.isToBeRetained()) {
                 geometryFetcher.fetchGeometries(matchedRule);

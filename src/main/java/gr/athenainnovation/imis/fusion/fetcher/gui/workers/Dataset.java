@@ -12,58 +12,31 @@ public class Dataset {
     private final  DBConnectionParameters dbConnectionParameters;
     private final String rootNodeNS;
     
-    private boolean remote;
+    //private boolean remote;
     private String unmodifiedLocalGraph;
     private String transformedLocalGraph;
     
     private boolean linksExist = false;
     private String linkFile;
-    private Boolean setFirstInLinks;
-    
-    /**
-     * Construct new local dataset with specified parameters. This constructor is meant for local datasets only and parameter remote must be false.
-     * @param endpoint sparql endpoint uri
-     * @param graph graph uri
-     * @param remote must be set to false
-     * @param rootNodeNS regex for matching the URI of root nodes in dataset
-     * @param dbConnectionParameters connection parameters for the db
-     * @throws IllegalArgumentException  if any parameters are null, if remote==true or if endpoint.isEmpty()==true
-     */
-    public Dataset(final String endpoint, final String graph, final boolean remote, final String rootNodeNS, final DBConnectionParameters dbConnectionParameters) throws IllegalArgumentException {
-        this(endpoint, graph, rootNodeNS, dbConnectionParameters);
-        
-        if(remote) {
-            throw new IllegalArgumentException("Wrong constructor. Dataset is remote, but no local endpoint has been specified.");
-        }
-        
-        this.remote = remote;
-    }
+    private Boolean setFirstInLinks;    
     
     /**
      * Construct new remote dataset with specified parameters. This constructor is meant for remote datasets only and parameter remote must be set to true.
      * No parameters may be null.
      * @param endpoint sparql endpoint uri
      * @param graph graph uri
-     * @param remote must be set to true
+     * param remote must be set to true
      * @param rootNodeNS regex for matching the URI of root nodes in dataset
      * @param unmodifiedLocalGraph local graph uri where the dataset is to be copied to with geometries intact
      * @param transformedLocalGraph local graph uri where the dataset is to be copied to with geometries transformed
      * @param dbConnectionParameters connection parameters for the db
      * @throws IllegalArgumentException  if any parameters are null, if remote==false or if endpoint.isEmpty()==true
      */
-    public Dataset(final String endpoint, final String graph, final boolean remote, final String rootNodeNS, final String unmodifiedLocalGraph, final String transformedLocalGraph, 
+    public Dataset(final String endpoint, final String graph, final String rootNodeNS, final String unmodifiedLocalGraph, final String transformedLocalGraph, 
             final DBConnectionParameters dbConnectionParameters)
             throws IllegalArgumentException {
         this(endpoint, graph, rootNodeNS, dbConnectionParameters);
         
-        if(!remote) {
-            throw new IllegalArgumentException("Wrong constructor. Dataset is not remote, but local graphs has been specified.");
-        }
-        if(unmodifiedLocalGraph == null || transformedLocalGraph == null) {
-            throw new IllegalArgumentException("Local graphs cannot be null.");
-        }
-        
-        this.remote = remote;
         this.unmodifiedLocalGraph = unmodifiedLocalGraph;
         this.transformedLocalGraph = transformedLocalGraph;
     }
@@ -106,13 +79,6 @@ public class Dataset {
         return graph;
     }
     
-    /**
-     *
-     * @return true if dataset is located remotely, false otherwise
-     */
-    public boolean isRemote() {
-        return remote;
-    }
     
     /**
      * 
@@ -128,10 +94,7 @@ public class Dataset {
      * @throws IllegalStateException if dataset is not remote
      */
     @NotNull
-    public String getUnmodifiedLocalGraph() throws IllegalStateException {
-        if(!remote) {
-            throw new IllegalStateException("Local graph requested but dataset is not remote.");
-        }
+    public String getUnmodifiedLocalGraph() throws IllegalStateException {       
         return unmodifiedLocalGraph;
     }
     
@@ -142,9 +105,7 @@ public class Dataset {
      */
     @NotNull
     public String getTransformedLocalGraph() throws IllegalStateException {
-        if(!remote) {
-            throw new IllegalStateException("Local graph requested but dataset is not remote.");
-        }
+
         return transformedLocalGraph;
     }
     

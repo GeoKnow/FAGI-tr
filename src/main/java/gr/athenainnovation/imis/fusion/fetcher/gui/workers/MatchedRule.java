@@ -31,7 +31,7 @@ public class MatchedRule {
     }
     
     /**
-     * Constructor for scenarios where matching thew an exception.
+     * Constructor for scenarios where matching threw an exception.
      * @param rule rule
      * @param exceptionMessageThrown exception message
      */
@@ -90,7 +90,7 @@ public class MatchedRule {
      */
     public boolean isToBeRetained() {
         return toBeRetained;
-    }
+    }    
 
     /**
      *

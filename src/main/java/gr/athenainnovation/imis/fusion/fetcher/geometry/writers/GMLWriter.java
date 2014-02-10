@@ -34,6 +34,7 @@ public class GMLWriter implements GeometryWriter {
         
         for(Entry<String, Variable> varEntry : objectVariableMap.entrySet()) {
             if(RuleTriple.GML.equals(varEntry.getValue().getType())) {
+
                 final Variable variable = varEntry.getValue();
                 variable.setContent(serialisation);
                 objectVariableMap.put(varEntry.getKey(), variable);

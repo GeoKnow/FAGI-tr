@@ -47,7 +47,7 @@ public class RulePattern {
     
     /**
      *
-     * @return prediacate variable map
+     * @return predicate variable map
      */
     public Map<String, Variable> getPredicateVariables() {
         return predicateVariables;

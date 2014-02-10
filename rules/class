@@ -6,7 +6,6 @@
 # Reg. expressions must be enclosed in '"'. During regex matching case is ignored.
 # URIs must be enclosed in "{", "}".
 
-
 <c_geosparql_geometry> {http://www.opengis.net/ont/geosparql#Geometry}
 <c_geoowl_geometry> {http://www.opengis.net/gml/_Geometry}
 <c_neogeo_geometry> {http://geovocab.org/geometry#Geometry}

@@ -1,0 +1,3 @@
+<http://linkedgeodata.org/triplify/node162150121> <http://www.opengis.net/ont/geosparql#hasGeometry> _:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe .
+
+_:BX2D1737316aX3A13fd28bf7e5X3AX2D7ffe <http://www.opengis.net/ont/geosparql#asWKT> "POINT(20.8579419 39.610261)"^^<http://www.opengis.net/ont/geosparql#wktLiteral> .

@@ -111,7 +111,7 @@ public class RuleConfigParser {
 
     /**
      *
-     * @param file coniguration file path
+     * @param file configuration file path
      * @param type prefix for rule. Should be either {@link RuleConfigParser#COMBINED_RULE_PREFIX} for combined type rules or {@link RuleConfigParser#KNOWN_RULE_PREFIX} for known type rules
      */
     private void readTripleRules(String file, String type) {

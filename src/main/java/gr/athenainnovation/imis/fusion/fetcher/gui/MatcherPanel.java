@@ -7,6 +7,7 @@ import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.collect.Ordering;
 import gr.athenainnovation.imis.fusion.fetcher.geometry.GeometryProcessor;
+//import gr.athenainnovation.imis.fusion.fetcher.geometry.crs.GeometryCRS;
 import gr.athenainnovation.imis.fusion.fetcher.gui.listeners.DatasetListener;
 import gr.athenainnovation.imis.fusion.fetcher.gui.listeners.RuleListener;
 import gr.athenainnovation.imis.fusion.fetcher.gui.workers.MatchedRule;
@@ -32,6 +33,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.apache.log4j.Logger;
 
+ import javax.swing.ImageIcon;
+
 /**
  * Matcher panel.
  * @author Thomas Maroulis
@@ -51,6 +54,10 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
     private int datasetType;
     
     private boolean datasetChanged = false;
+    //icons path
+    private final ImageIcon v = new ImageIcon("/home/imis-nkarag/software/fusion-fetcher/src/test/resources/icons/v.png");
+    private final ImageIcon x = new ImageIcon("/home/imis-nkarag/software/fusion-fetcher/src/test/resources/icons/x.png");
+    //end
     
     /**
      * Creates new form MatcherPanel
@@ -61,7 +68,7 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         this.messageListener = messageListener;
         this.config = config;
         this.datasetType = datasetType;
-        
+
         initComponents();
     }
     
@@ -182,6 +189,12 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         jScrollPane11 = new javax.swing.JScrollPane();
         ruleTriplesField = new javax.swing.JTable();
         toBeRetainedCheckbox = new javax.swing.JCheckBox();
+        checkedRuleWKT = new javax.swing.JLabel();
+        checkedRuleLatLon1 = new javax.swing.JLabel();
+        checkedRuleLoc1 = new javax.swing.JLabel();
+        checkedRuleLoc3 = new javax.swing.JLabel();
+        checkedRuleLatLon2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         numOfRulesLabel = new javax.swing.JLabel();
         numOfRulesField = new javax.swing.JLabel();
         matcherBeginButton = new javax.swing.JButton();
@@ -265,6 +278,7 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         });
         jScrollPane11.setViewportView(ruleTriplesField);
 
+        toBeRetainedCheckbox.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         toBeRetainedCheckbox.setText("Retain?");
         toBeRetainedCheckbox.setEnabled(false);
         toBeRetainedCheckbox.addItemListener(new java.awt.event.ItemListener() {
@@ -273,6 +287,24 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
             }
         });
 
+        checkedRuleWKT.setText("\u2610 d_geosparql_wkt");
+        checkedRuleWKT.setIcon(x);
+
+        checkedRuleLatLon1.setText("\u2610 d_w3c_lat_lon1");
+        checkedRuleLatLon1.setIcon(x);
+
+        checkedRuleLoc1.setText("\u2610 d_w3c_loc1");
+        checkedRuleLoc1.setIcon(x);
+
+        checkedRuleLoc3.setText("\u2610 d_w3c_loc3");
+        checkedRuleLoc3.setIcon(x);
+
+        checkedRuleLatLon2.setText("\u2610 d_w3c_lat_lon2");
+        checkedRuleLatLon2.setIcon(x);
+
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel5.setText("Rules to be Retained:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -280,34 +312,6 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(ruleNumOfTimesMatchedLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ruleNumOfTimesMatchedField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sourceSRIDLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sridField, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ruleStatusField))
-                            .addComponent(jScrollPane3)
-                            .addComponent(jScrollPane10)
-                            .addComponent(jScrollPane11)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(toBeRetainedCheckbox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(numOfRulesExecutedLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -320,7 +324,43 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
                         .addComponent(numOfRulesReturnedErrorLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(numOfRulesReturnedErrorField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(checkedRuleLoc3, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                .addComponent(checkedRuleLoc1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(checkedRuleLatLon2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(checkedRuleLatLon1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(checkedRuleWKT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel5))
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(ruleNumOfTimesMatchedLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ruleNumOfTimesMatchedField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sourceSRIDLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sridField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ruleStatusField))
+                            .addComponent(jScrollPane3)
+                            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+                            .addComponent(jScrollPane11)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(toBeRetainedCheckbox))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -334,7 +374,6 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
                     .addComponent(numOfRulesMatchedField)
                     .addComponent(numOfRulesReturnedErrorLabel)
                     .addComponent(numOfRulesReturnedErrorField))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -344,7 +383,7 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
                             .addComponent(sourceSRIDLabel)
                             .addComponent(jLabel1)
                             .addComponent(sridField))
-                        .addGap(21, 21, 21)
+                        .addGap(24, 24, 24)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(toBeRetainedCheckbox))
@@ -353,12 +392,27 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                        .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
-                    .addComponent(jScrollPane6))
+                        .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkedRuleWKT, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkedRuleLatLon1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkedRuleLatLon2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkedRuleLoc1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkedRuleLoc3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -481,7 +535,94 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         
         datasetChanged = false;
     }//GEN-LAST:event_matcherBeginButtonActionPerformed
-    
+
+    private void toBeRetainedCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_toBeRetainedCheckboxItemStateChanged
+
+        if(matchedRule == null) return;
+
+        JCheckBox checkbox = (JCheckBox) evt.getSource();
+        boolean state = checkbox.isSelected();
+        matchedRule.setToBeRetained(state);
+                
+        //shows check if specific rule is to be retained
+        if (matchedRule.isToBeRetained() ){
+            switch(ruleID){
+                /*
+                case "d_geosparql_gml" :
+                checkedRuleGML.setText("\u2611 " + ruleID);
+                checkedRuleGML.setIcon(v);
+                break;
+                */
+                case "d_geosparql_wkt" :
+                checkedRuleWKT.setText("\u2611 " + ruleID);
+                checkedRuleWKT.setIcon(v);
+                break;
+                /*    
+                case "d_postgis_importer" :
+                checkedRulePostGIS.setText("\u2611 " + ruleID);
+                checkedRulePostGIS.setIcon(v);
+                break;
+                */    
+                case "d_w3c_lat_lon1" :
+                checkedRuleLatLon1.setText("\u2611 " + ruleID);
+                checkedRuleLatLon1.setIcon(v);
+                break;
+                case "d_w3c_lat_lon2" :
+                checkedRuleLatLon2.setText("\u2611 " + ruleID);
+                checkedRuleLatLon2.setIcon(v);
+                break;
+                case "d_w3c_loc1" :
+                checkedRuleLoc1.setText("\u2611 " + ruleID);
+                checkedRuleLoc1.setIcon(v);
+                break;
+                case "d_w3c_loc3" :
+                checkedRuleLoc3.setText("\u2611 " + ruleID);
+                checkedRuleLoc3.setIcon(v);
+                break;
+            }
+        }
+        else {           
+            switch(ruleID){
+                /*
+                case "d_geosparql_gml" :
+                checkedRuleGML.setIcon(x);
+                checkedRuleGML.setText("\u2610 " + ruleID);                
+                break;
+                */
+                case "d_geosparql_wkt" :
+                checkedRuleWKT.setIcon(x);
+                checkedRuleWKT.setText("\u2610 " + ruleID);
+                break;
+                /*    
+                case "d_postgis_importer" :
+                checkedRulePostGIS.setIcon(x);
+                checkedRulePostGIS.setText("\u2610 " + ruleID);
+                break;
+                */        
+                case "d_w3c_lat_lon1" :
+                checkedRuleLatLon1.setIcon(x);    
+                checkedRuleLatLon1.setText("\u2610 " + ruleID);
+                break;
+                case "d_w3c_lat_lon2" :
+                checkedRuleLatLon2.setIcon(x);
+                checkedRuleLatLon2.setText("\u2610 " + ruleID);
+                break;
+                case "d_w3c_loc1" :
+                checkedRuleLoc1.setIcon(x);
+                checkedRuleLoc1.setText("\u2610 " + ruleID);
+                break;
+                case "d_w3c_loc3" :
+                checkedRuleLoc3.setIcon(x);
+                checkedRuleLoc3.setText("\u2610 " + ruleID);                
+                break;
+            }
+        }
+        //reset();
+
+        matchedRulesMap.put(ruleID, matchedRule);
+        updateRuleProductionListener(matchedRulesMap);
+    }//GEN-LAST:event_toBeRetainedCheckboxItemStateChanged
+
     private void ruleListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ruleListValueChanged
         JList list = (JList) evt.getSource();
 
@@ -500,23 +641,13 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
 
             if(matchedRule.getTimesMatched().isPresent() && matchedRule.getTimesMatched().get() > 0 && matchedRule.getRulePattern().isPresent()) {
                 setRuleMatchedTriplesField(matchedRule.getRulePattern().get());
-                
+
                 toBeRetainedCheckbox.setEnabled(true);
                 toBeRetainedCheckbox.setSelected(matchedRule.isToBeRetained());
             }
         }
     }//GEN-LAST:event_ruleListValueChanged
-
-    private void toBeRetainedCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_toBeRetainedCheckboxItemStateChanged
-        if(matchedRule == null) return;
-        
-        JCheckBox checkbox = (JCheckBox) evt.getSource();
-        boolean state = checkbox.isSelected();
-        matchedRule.setToBeRetained(state);
-        matchedRulesMap.put(ruleID, matchedRule);
-        updateRuleProductionListener(matchedRulesMap);
-    }//GEN-LAST:event_toBeRetainedCheckboxItemStateChanged
-    
+      
     private void reset() {
         numOfRulesField.setText("0");
         numOfRulesExecutedField.setText("0");
@@ -525,6 +656,33 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         ruleList.setModel(model);
         
         resetRuleValues();
+        
+        //reset the labels of rules chosen to be retained
+        resetRetainedRules();    
+    }
+    
+    //reset labels of the rules to be retained
+    private void resetRetainedRules(){
+        //checkedRuleGML.setIcon(x);
+        //checkedRuleGML.setText("\u2610 d_geosparql_gml");
+        
+        checkedRuleWKT.setIcon(x);
+        checkedRuleWKT.setText("\u2610 d_geosparql_wkt");
+        
+        //checkedRulePostGIS.setIcon(x);
+        //checkedRulePostGIS.setText("\u2610 d_postgis_importer");
+        
+        checkedRuleLatLon1.setIcon(x);
+        checkedRuleLatLon1.setText("\u2610 d_w3c_lat_lon1");
+        
+        checkedRuleLatLon2.setIcon(x);
+        checkedRuleLatLon2.setText("\u2610 d_w3c_lat_lon2");
+        
+        checkedRuleLoc1.setIcon(x);
+        checkedRuleLoc1.setText("\u2610 d_w3c_loc1");
+        
+        checkedRuleLoc3.setIcon(x);
+        checkedRuleLoc3.setText("\u2610 d_w3c_loc3");
     }
     
     private void resetRuleValues() {
@@ -558,10 +716,19 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
     }
     
     private void setSRIDField(Optional<GeometryProcessor> geometryProcessor) {
-        if(geometryProcessor.isPresent()) {
-            String sridText = geometryProcessor.get().getGeometryCRS().getAuthority() + ":" + geometryProcessor.get().getGeometryCRS().getSRID();
-            if(geometryProcessor.get().getGeometryCRS().isLongitudeFirst()) sridText = sridText.concat(" (Long/Lat)");
-            sridField.setText(sridText);
+        
+        String sridText;
+        if(geometryProcessor.isPresent()) {              
+            
+            if (matchedRule.getTimesMatched().get() > 0){//jan15 this checks if the selected rule matched triples from dataset to get srid or not
+                sridText = geometryProcessor.get().getGeometryCRS().getAuthority() + ":" + geometryProcessor.get().getGeometryCRS().getSRID();
+
+                if(geometryProcessor.get().getGeometryCRS().isLongitudeFirst()) 
+                {
+                 sridText = sridText.concat(" (Long/Lat)");
+                 sridField.setText(sridText);
+                }                               
+            }
         }
         else sridField.setText("N/A");
     }
@@ -594,11 +761,11 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
         ruleTriplesField.setModel(tableModel);      
     }
     
+    
     private void setRuleMatchedTriplesField(RulePattern rulePattern) {
         List<String> triples = RuleQueryUtils.substituteVariableContentIntoPattern(rulePattern);
         
         DefaultTableModel tableModel = (DefaultTableModel) ruleMatchedTriplesField.getModel();
-        
         for(String triple : triples) {
             String[] row = triple.split(" ", 3);
             tableModel.addRow(row);
@@ -610,10 +777,16 @@ public class MatcherPanel extends javax.swing.JPanel implements DatasetListener 
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel checkedRuleLatLon1;
+    private javax.swing.JLabel checkedRuleLatLon2;
+    private javax.swing.JLabel checkedRuleLoc1;
+    private javax.swing.JLabel checkedRuleLoc3;
+    private javax.swing.JLabel checkedRuleWKT;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;

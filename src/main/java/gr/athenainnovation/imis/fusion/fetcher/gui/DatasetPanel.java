@@ -7,7 +7,6 @@ import gr.athenainnovation.imis.fusion.fetcher.gui.workers.Dataset;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
@@ -67,7 +66,6 @@ public class DatasetPanel extends javax.swing.JPanel {
         sourceGraphLabel = new javax.swing.JLabel();
         sourceEndpointField = new javax.swing.JTextField();
         sourceGraphField = new javax.swing.JTextField();
-        sourceRemoteCheckbox = new javax.swing.JCheckBox();
         sourceDatasetStatusLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         sourceDatasetUnmodLocalGraphField = new javax.swing.JTextField();
@@ -80,7 +78,6 @@ public class DatasetPanel extends javax.swing.JPanel {
         targetEndpointField = new javax.swing.JTextField();
         targetGraphLabel = new javax.swing.JLabel();
         targetGraphField = new javax.swing.JTextField();
-        targetRemoteCheckbox = new javax.swing.JCheckBox();
         targetDatasetStatusLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         targetDatasetUnmodLocalGraphField = new javax.swing.JTextField();
@@ -109,29 +106,15 @@ public class DatasetPanel extends javax.swing.JPanel {
 
         sourceGraphLabel.setText("Graph:");
 
-        sourceRemoteCheckbox.setText("Remote");
-        sourceRemoteCheckbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                sourceRemoteCheckboxItemStateChanged(evt);
-            }
-        });
-        sourceRemoteCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sourceRemoteCheckboxActionPerformed(evt);
-            }
-        });
+        sourceEndpointField.setText("http://localhost:8890/sparql");
+
+        sourceGraphField.setText("http://localhost:8890/wikimapia_points");
 
         sourceDatasetStatusLabel.setText("Source dataset not set...");
 
         jLabel2.setText("Local graph (unmodified):");
 
-        sourceDatasetUnmodLocalGraphField.setEditable(false);
-        sourceDatasetUnmodLocalGraphField.setEnabled(false);
-
         jLabel1.setText("Local graph (transformed):");
-
-        sourceDatasetModLocalGraphField.setEditable(false);
-        sourceDatasetModLocalGraphField.setEnabled(false);
 
         jLabel9.setText("Root node namespace (regex):");
 
@@ -143,8 +126,7 @@ public class DatasetPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(sourceDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(sourceDatasetPanelLayout.createSequentialGroup()
-                        .addComponent(sourceRemoteCheckbox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(sourceDatasetStatusLabel))
                     .addGroup(sourceDatasetPanelLayout.createSequentialGroup()
                         .addGroup(sourceDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,9 +162,7 @@ public class DatasetPanel extends javax.swing.JPanel {
                     .addComponent(sourceGraphLabel)
                     .addComponent(sourceGraphField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(sourceDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sourceRemoteCheckbox)
-                    .addComponent(sourceDatasetStatusLabel))
+                .addComponent(sourceDatasetStatusLabel)
                 .addGap(18, 18, 18)
                 .addGroup(sourceDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
@@ -202,31 +182,17 @@ public class DatasetPanel extends javax.swing.JPanel {
 
         targetEndpointLabel.setText("Endpoint:");
 
+        targetEndpointField.setText("http://localhost:8890/sparql");
+
         targetGraphLabel.setText("Graph:");
 
-        targetRemoteCheckbox.setText("Remote");
-        targetRemoteCheckbox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                targetRemoteCheckboxItemStateChanged(evt);
-            }
-        });
-        targetRemoteCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                targetRemoteCheckboxActionPerformed(evt);
-            }
-        });
+        targetGraphField.setText("http://localhost:8890/wikimapia_points");
 
         targetDatasetStatusLabel.setText("Target dataset not set...");
 
         jLabel4.setText("Local graph (unmodified):");
 
-        targetDatasetUnmodLocalGraphField.setEditable(false);
-        targetDatasetUnmodLocalGraphField.setEnabled(false);
-
         jLabel3.setText("Local graph (transformed):");
-
-        targetDatasetModLocalGraphField.setEditable(false);
-        targetDatasetModLocalGraphField.setEnabled(false);
 
         jLabel10.setText("Root node namespace (regex):");
 
@@ -246,8 +212,7 @@ public class DatasetPanel extends javax.swing.JPanel {
                             .addComponent(targetEndpointField)
                             .addComponent(targetGraphField)))
                     .addGroup(targetDatasetPanelLayout.createSequentialGroup()
-                        .addComponent(targetRemoteCheckbox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(targetDatasetStatusLabel))
                     .addGroup(targetDatasetPanelLayout.createSequentialGroup()
                         .addGroup(targetDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +220,7 @@ public class DatasetPanel extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addGap(44, 44, 44)
                         .addGroup(targetDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(targetDatasetUnmodLocalGraphField)
+                            .addComponent(targetDatasetUnmodLocalGraphField, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                             .addComponent(targetDatasetModLocalGraphField)))
                     .addGroup(targetDatasetPanelLayout.createSequentialGroup()
                         .addComponent(jLabel10)
@@ -274,10 +239,8 @@ public class DatasetPanel extends javax.swing.JPanel {
                 .addGroup(targetDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(targetGraphLabel)
                     .addComponent(targetGraphField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addGroup(targetDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(targetRemoteCheckbox)
-                    .addComponent(targetDatasetStatusLabel))
+                .addGap(26, 26, 26)
+                .addComponent(targetDatasetStatusLabel)
                 .addGap(18, 18, 18)
                 .addGroup(targetDatasetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -315,7 +278,11 @@ public class DatasetPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Username:");
 
+        dbUsernameField.setText("dba");
+
         jLabel8.setText("Password:");
+
+        dbPasswordField.setText("dba");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -441,55 +408,60 @@ public class DatasetPanel extends javax.swing.JPanel {
             DBConnectionParameters dbConnectionParameters = new DBConnectionParameters(dbURLField.getText(), dbUsernameField.getText(), dbPasswordField.getText());
 
             Dataset sourceDataset;
-            if(!sourceRemoteCheckbox.isSelected()) {
-                sourceDataset = new Dataset(sourceEndpointField.getText(), sourceGraphField.getText(), sourceRemoteCheckbox.isSelected(), sourceDatasetRootNodeNS.getText(), dbConnectionParameters);
-            }
-            else {
-                sourceDataset = new Dataset(sourceEndpointField.getText(), sourceGraphField.getText(), sourceRemoteCheckbox.isSelected(), sourceDatasetRootNodeNS.getText(),
-                        sourceDatasetUnmodLocalGraphField.getText(), sourceDatasetModLocalGraphField.getText(), dbConnectionParameters);
-            }
-
-            sourceDataset.setLinks(linkFileField.getText(), !linkFileOrderToggle.isSelected());
-
-            setSourceDataset(sourceDataset);
-            sourceDatasetStatusLabel.setText("Source dataset set!");
+                        
+            //set appropriate graph names for modified and unmodified graphs           
+            if (sourceDatasetUnmodLocalGraphField.getText().isEmpty()) //if unmod field is empty            
+                sourceDatasetUnmodLocalGraphField.setText(sourceGraphField.getText().concat("_SourceUnmod")); //set text to unmod field           
+            if (sourceDatasetModLocalGraphField.getText().isEmpty())
+                sourceDatasetModLocalGraphField.setText(sourceGraphField.getText().concat("_SourceMod"));
+            //for target
+            if (targetDatasetUnmodLocalGraphField.getText().isEmpty()) //if unmod field is empty            
+                targetDatasetUnmodLocalGraphField.setText(targetGraphField.getText().concat("_TargetUnmod")); //set text to unmod field           
+            if (targetDatasetModLocalGraphField.getText().isEmpty())
+                targetDatasetModLocalGraphField.setText(targetGraphField.getText().concat("_TargetMod"));            
             
+            // this command replaces the bellow if condition meant for the checkbox 
+            sourceDataset = new Dataset(sourceEndpointField.getText(), sourceGraphField.getText(), sourceDatasetRootNodeNS.getText(),
+                        sourceDatasetUnmodLocalGraphField.getText(), sourceDatasetModLocalGraphField.getText(), dbConnectionParameters);                                                                                                
+            
+            sourceDataset.setLinks(linkFileField.getText(), !linkFileOrderToggle.isSelected());
+            setSourceDataset(sourceDataset);
+            sourceDatasetStatusLabel.setText("Source dataset set!");                                              
             Dataset targetDataset;
-            if(!targetRemoteCheckbox.isSelected()) {
-                targetDataset = new Dataset(targetEndpointField.getText(), targetGraphField.getText(), targetRemoteCheckbox.isSelected(), targetDatasetRootNodeNS.getText(), dbConnectionParameters);
-            }
-            else {
-                targetDataset = new Dataset(targetEndpointField.getText(), targetGraphField.getText(), targetRemoteCheckbox.isSelected(), targetDatasetRootNodeNS.getText(),
-                        targetDatasetUnmodLocalGraphField.getText(), targetDatasetModLocalGraphField.getText(), dbConnectionParameters);
-            }
+            
 
+            targetDataset = new Dataset(targetEndpointField.getText(), targetGraphField.getText(), targetDatasetRootNodeNS.getText(),
+                        targetDatasetUnmodLocalGraphField.getText(), targetDatasetModLocalGraphField.getText(), dbConnectionParameters);                                                                                      
+            
             targetDataset.setLinks(linkFileField.getText(), linkFileOrderToggle.isSelected());
 
             setTargetDataset(targetDataset);
-            targetDatasetStatusLabel.setText("Target dataset set!");
-
+            targetDatasetStatusLabel.setText("Target dataset set!");            
+                        
             setDatasetsReady(true);
             setFieldEnabled(false);
         }
         catch (IllegalArgumentException | IllegalStateException ex) {
             messageListener.printMessageDialogue("Error", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
+        }                
+        
     }//GEN-LAST:event_datasetPanelOkButtonActionPerformed
-
+               
     private void setFieldEnabled(boolean status) {
+                
         sourceEndpointField.setEditable(status);
         sourceGraphField.setEditable(status);
-        sourceRemoteCheckbox.setEnabled(status);
+        //sourceRemoteCheckbox.setEnabled(status);
         sourceDatasetRootNodeNS.setEditable(status);
         sourceDatasetUnmodLocalGraphField.setEditable(status);
-        sourceDatasetModLocalGraphField.setEditable(status);
+        sourceDatasetModLocalGraphField.setEditable(status);              
         
         targetEndpointField.setEditable(status);
         targetGraphField.setEditable(status);
-        targetRemoteCheckbox.setEnabled(status);
+        //targetRemoteCheckbox.setEnabled(status);
         targetDatasetRootNodeNS.setEditable(status);
         targetDatasetUnmodLocalGraphField.setEditable(status);
-        sourceDatasetModLocalGraphField.setEditable(status);
+        targetDatasetModLocalGraphField.setEditable(status);
         
         linkFileField.setEditable(status);
         linkFileOrderToggle.setEnabled(status);
@@ -505,18 +477,6 @@ public class DatasetPanel extends javax.swing.JPanel {
         }
     }
     
-    private void sourceRemoteCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sourceRemoteCheckboxItemStateChanged
-        JCheckBox checkbox = (JCheckBox) evt.getSource();
-        sourceDatasetUnmodLocalGraphField.setEditable(checkbox.isSelected());
-        sourceDatasetModLocalGraphField.setEditable(checkbox.isSelected());
-    }//GEN-LAST:event_sourceRemoteCheckboxItemStateChanged
-
-    private void targetRemoteCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_targetRemoteCheckboxItemStateChanged
-        JCheckBox checkBox = (JCheckBox) evt.getSource();
-        targetDatasetUnmodLocalGraphField.setEditable(checkBox.isSelected());
-        targetDatasetModLocalGraphField.setEditable(checkBox.isSelected());
-    }//GEN-LAST:event_targetRemoteCheckboxItemStateChanged
-
     private void linkFileOrderToggleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_linkFileOrderToggleItemStateChanged
         JToggleButton toggle = (JToggleButton) evt.getSource();
         if(!toggle.isSelected()) toggle.setText("Links: Source -> Target");
@@ -537,19 +497,7 @@ public class DatasetPanel extends javax.swing.JPanel {
             linkFileField.setText(fileChooser.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_linkFileChooserButtonActionPerformed
-
-    private void sourceRemoteCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceRemoteCheckboxActionPerformed
-        JCheckBox checkbox = (JCheckBox) evt.getSource();
-        sourceDatasetUnmodLocalGraphField.setEnabled(checkbox.isSelected());
-        sourceDatasetModLocalGraphField.setEnabled(checkbox.isSelected());
-    }//GEN-LAST:event_sourceRemoteCheckboxActionPerformed
-
-    private void targetRemoteCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetRemoteCheckboxActionPerformed
-        JCheckBox checkbox = (JCheckBox) evt.getSource();
-        targetDatasetUnmodLocalGraphField.setEnabled(checkbox.isSelected());
-        targetDatasetModLocalGraphField.setEnabled(checkbox.isSelected());
-    }//GEN-LAST:event_targetRemoteCheckboxActionPerformed
-
+/**/
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton datasetPanelOkButton;
     private javax.swing.JTextField dbPasswordField;
@@ -580,7 +528,6 @@ public class DatasetPanel extends javax.swing.JPanel {
     private javax.swing.JLabel sourceEndpointLabel;
     private javax.swing.JTextField sourceGraphField;
     private javax.swing.JLabel sourceGraphLabel;
-    private javax.swing.JCheckBox sourceRemoteCheckbox;
     private javax.swing.JTextField targetDatasetModLocalGraphField;
     private javax.swing.JPanel targetDatasetPanel;
     private javax.swing.JTextField targetDatasetRootNodeNS;
@@ -590,6 +537,5 @@ public class DatasetPanel extends javax.swing.JPanel {
     private javax.swing.JLabel targetEndpointLabel;
     private javax.swing.JTextField targetGraphField;
     private javax.swing.JLabel targetGraphLabel;
-    private javax.swing.JCheckBox targetRemoteCheckbox;
     // End of variables declaration//GEN-END:variables
 }

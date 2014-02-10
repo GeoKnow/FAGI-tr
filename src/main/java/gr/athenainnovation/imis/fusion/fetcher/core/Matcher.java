@@ -14,6 +14,7 @@ import gr.athenainnovation.imis.fusion.fetcher.geometry.GMLProcessor;
 import gr.athenainnovation.imis.fusion.fetcher.geometry.GeometryProcessor;
 import gr.athenainnovation.imis.fusion.fetcher.geometry.LatLongProcessor;
 import gr.athenainnovation.imis.fusion.fetcher.geometry.WKTProcessor;
+//import gr.athenainnovation.imis.fusion.fetcher.geometry.GeoRSSProcessor;
 import gr.athenainnovation.imis.fusion.fetcher.geometry.crs.GeometryCRS;
 import gr.athenainnovation.imis.fusion.fetcher.rules.RuleTriple;
 import gr.athenainnovation.imis.fusion.fetcher.rules.RulePattern;
@@ -106,6 +107,10 @@ public class Matcher {
                             geometryProcessor = new EastingNorthingProcessor();
                         }
                         northingFound = true;
+                        break;
+                    case RuleTriple.GEORSS:
+                        checkIfProcessorInitialised(geometryProcessor, ruleID);
+                        //geometryProcessor = new GeoRSSProcessor();
                         break;
                     default:
                         break;
@@ -243,7 +248,7 @@ public class Matcher {
         Map<String,Variable> objectVariableMap = localRulePattern.getObjectVariables();
         objectVariableMap = getObjectNodeContent(querySolution, objectVariableMap);
         localRulePattern.setObjectVariables(objectVariableMap);
-
+        
         return localRulePattern;
     }
     
@@ -277,7 +282,6 @@ public class Matcher {
             var.setContent(content);
             varMap.put(varEntry.getKey(), var);
         }
-        
         return varMap;
     }
     
@@ -303,8 +307,7 @@ public class Matcher {
             }
             var.setContent(content);
             varMap.put(varEntry.getKey(), var);
-        }
-        
+        }        
         return varMap;
     }
 }
